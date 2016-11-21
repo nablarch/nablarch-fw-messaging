@@ -1,0 +1,5 @@
+file-type:        "Fixed"
+text-encoding:    "utf8"
+record-length:    10
+[Data]
+1 data  X(10)    # データ

@@ -1,0 +1,13 @@
+file-type:        "Fixed"
+text-encoding:    "sjis"
+record-length:    200
+record-separator: "\n"
+
+[Data]
+1   title      X(50)    # 書名
+51  publisher  X(50)    # 出版社
+101 authors    X(100)   # 著者
+
+[Trailer]
+1  bookCount   Z(5)    # レコード数
+6 ?reserved    X(195)  # 予備領域

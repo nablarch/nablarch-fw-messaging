@@ -1,0 +1,8 @@
+file-type:        "Fixed"
+text-encoding:    "sjis"
+record-length:    10
+record-separator: "\n"
+
+[Reply]
+1   statusCode  X(5)     # 処理結果コード
+6   processedCount Z(5)  # 処理対象レコード数

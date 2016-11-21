@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../../../../main/resources/component-configuration.xsd">
+
+  <!-- 汎用データフォーマッタ設定 -->
+  <component name="filePathSetting"
+             class="nablarch.core.util.FilePathSetting" autowireType="None">
+    <property name="basePathSettings">
+      <map>
+        <entry key="format" value="file:temp/format" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+  </component>
+
+  <!-- MessageSenderの設定情報 -->
+  <config-file file="classpath:nablarch/fw/messaging/MessageSenderTest_realtime.config" />
+
+  <component name="defaultProvider" class="nablarch.fw.messaging.CustomMessagingProvider">
+    <property name="name" value="default" />
+  </component>
+
+  <!-- HTTP通信用クライアント -->
+  <component name="defaultMessagingClient" class="nablarch.fw.messaging.realtime.http.client.StubHTTPMessagingClient">
+  </component>
+  
+  <component name="messagingClientThrowException" class="nablarch.fw.messaging.MessagingSenderClientThrowException">
+  </component>
+
+  <!-- SSL情報取得用クラス(任意項目)-->
+  <component name="nopSSLContextSettings" class="nablarch.fw.messaging.realtime.http.settings.NopHttpSSLContextSettings">
+  </component>
+  <component name="defaultSSLContextSettings" class="nablarch.fw.messaging.realtime.http.settings.DummyHttpSSLContextSettings">
+    <property name="name" value="default" />
+  </component>
+  <component name="customSSLContextSettings" class="nablarch.fw.messaging.realtime.http.settings.DummyHttpSSLContextSettings">
+    <property name="name" value="custom" />
+  </component>
+  
+  <!-- メッセージ送信の処理前後に処理を行うコンポーネント -->
+  <component name="dummySyncMessagingEventHookA" class="nablarch.fw.messaging.DummySyncMessagingEventHookA">
+  </component>
+  <component name="dummySyncMessagingEventHookB" class="nablarch.fw.messaging.DummySyncMessagingEventHookB">
+  </component>
+  <component name="stubSyncMessagingEventHookA" class="nablarch.fw.messaging.StubSyncMessagingEventHookA">
+  </component>
+  <component name="stubSyncMessagingEventHookB" class="nablarch.fw.messaging.StubSyncMessagingEventHookB">
+  </component>
+  <component name="stubSyncMessagingEventHookC" class="nablarch.fw.messaging.StubSyncMessagingEventHookC">
+  </component>
+</component-configuration>
