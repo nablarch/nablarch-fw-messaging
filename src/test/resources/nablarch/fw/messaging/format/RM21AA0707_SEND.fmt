@@ -1,0 +1,14 @@
+file-type:        "Fixed"
+text-encoding:    "UTF-8"
+record-length:    60
+
+[header]
+1   resendFlag  X(1)       # 再送要求フラグ
+                           # (0: 初回送信 / 1: 再送要求 / blank: 再送不要)
+2   requestId   X(20)      # リクエストID
+22 ?reserved    X(39)      # 予備領域
+
+[data]
+1   authors     X(20)     # 著者
+21  title       X(20)     # 書名
+41  publisher   X(20)     # 出版社

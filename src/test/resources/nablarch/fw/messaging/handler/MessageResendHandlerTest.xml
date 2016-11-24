@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns = "http://tis.co.jp/nablarch/component-configuration">
+	<!-- データベース接続構成 -->
+    <import file="db-default.xml"/>
+          
+    <!-- データベース接続管理ハンドラ -->
+    <component name="dbConnectionManagementHandler" class="nablarch.common.handler.DbConnectionManagementHandler">
+	</component>
+          
+    <!-- 透過的トランザクションの設定 -->
+    <component name="transactionManagementHandler" class="nablarch.common.handler.TransactionManagementHandler">
+	</component>
+            
+</component-configuration>

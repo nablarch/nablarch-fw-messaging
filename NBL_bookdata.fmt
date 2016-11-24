@@ -1,0 +1,22 @@
+file-type:        "Fixed"
+text-encoding:    "sjis"
+record-length:    210
+record-separator: "\n"
+
+[Classifier]
+1  recordType X(1)    # レコードタイプ判定
+
+[Book]
+recordType = "1"
+1   recordType  X(1)  "1" # トレーラレコード判定
+2  ?filler      X(9)      # 未使用
+11  title       X(50)     # 書名
+61  publisher   X(50)     # 出版社
+111 authors     X(100)    # 著者
+
+[Summary]
+recordType = "9"
+1   recordType  X(1)   "9" # トレーラレコード判定
+2  ?filler      X(9)       # 未使用
+11  bookCount   Z(5)       # 処理対象レコード数
+16 ?reserved    X(195)     # 予備領域

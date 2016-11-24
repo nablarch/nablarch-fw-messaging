@@ -11,12 +11,14 @@ buildscript {
   }
   dependencies {
     classpath "com.nablarch.dev:nablarch-gradle-plugin:${nablarchGradlePluginVersion}"
+    classpath "net.saliman:gradle-cobertura-plugin:2.2.3"
   }
 }
 apply plugin: 'com.nablarch.dev.nablarch-build'
 apply plugin: 'com.nablarch.dev.nablarch-maven-deploy'
 apply plugin: 'com.nablarch.dev.nablarch-sonarqube'
 apply plugin: 'com.nablarch.dev.nablarch-version'
+apply from: 'https://github.com/nablarch/nablarch-gradle-plugin/blob/develop/scripts/cobertura/cobertura-0.0.1.gradle?raw=true'
 
 // ビルド時のJavaバージョンを指定する
 sourceCompatibility=JavaVersion.VERSION_1_6
@@ -27,6 +29,28 @@ dependencies {
   compile "com.nablarch.framework:nablarch-fw-standalone:${nablarchFwStandaloneVersion}"
   compile "com.nablarch.framework:nablarch-core-dataformat:${nablarchCoreDataformatVersion}"
   compile "com.nablarch.framework:nablarch-common-idgenerator:${nablarchCommonIdgeneratorVersion}"
+
+  testCompile "com.nablarch.framework:nablarch-fw-messaging-http:${nablarchFwMessagingHttpVersion}"
+  testCompile "com.nablarch.framework:nablarch-fw-messaging-mom:${nablarchFwMessagingMomVersion}"
+  testCompile "com.nablarch.framework:nablarch-common-idgenerator-jdbc:${nablarchCommonIdgeneratorJdbcVersion}"
+  testCompile "com.nablarch.framework:nablarch-common-auth-jdbc:${nablarchCommonAuthJdbcVersion}"
+  testCompile 'com.oracle:ojdbc6:11.2.0.2.0'
+  testCompile 'com.oracle:ucp:11.2.0.3.0'
+  testCompile "com.nablarch.dev:nablarch-test-support:0.0.5"
+  testCompile 'junit:junit:4.12'
+  testCompile "com.nablarch.dev:nablarch-test-support-hereis:1.0.0"
+  // testFW
+  testCompile(group: 'com.nablarch.framework', name: 'nablarch-testing', version: '1.0.7') {
+    exclude group: 'com.nablarch.framework', module: 'nablarch-all'
+  }
+
+  testRuntime files('src/test/java/')
+
+  cobertura ("net.sourceforge.cobertura:cobertura:1.9.4")
+}
+
+tasks.sonarRunner {
+  dependsOn = ['coverage']
 }
 
 task wrapper(type: Wrapper) {

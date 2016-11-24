@@ -1,0 +1,26 @@
+file-type:        "Fixed"
+text-encoding:    "sjis"
+record-length:    30
+record-separator: "\n"
+
+[Classifier]
+11  withUser    X(1)      # ユーザID使用フラグ (1:使用 0:不使用)
+
+[Type1Header]
+withUser = "1"
+1   requestId   X(10)     # リクエストID
+11  withUser    X(1)  "1" # ユーザID使用フラグ (1:使用 0:不使用)
+12  userId      X(10)     # ユーザID
+22  resendFlag  X(1)      # 再送要求フラグ
+                          # (0: 初回送信 / 1: 再送要求 / blank: 再送不要)
+23  statusCode  X(4)      # 処理結果コード
+27 ?reserved    X(4)      # 予備領域
+
+[Type2Header]
+withUser = "0"
+1   requestId   X(10)     # リクエストID
+11  withUser    X(1)  "0" # ユーザID使用フラグ (1:使用 0:不使用)
+12  resendFlag  X(1)      # 再送要求フラグ
+                          # (0: 初回送信 / 1: 再送要求 / blank: 再送不要)
+13  statusCode  X(4)      # 処理結果コード
+17 ?reserved    X(14)      # 予備領域

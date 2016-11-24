@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../../../../main/resources/component-configuration.xsd">
+
+  <!-- 汎用データフォーマッタ設定 -->
+  <component name="filePathSetting"
+             class="nablarch.core.util.FilePathSetting" autowireType="None">
+    <property name="basePathSettings">
+      <map>
+        <entry key="format" value="file:temp/format" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+  </component>
+
+  <!-- MessageSenderの設定情報 -->
+  <config-file file="classpath:nablarch/fw/messaging/realtime/http/client/HttpMessagingClientTest.config" />
+
+  <component name="defaultProvider" class="nablarch.fw.messaging.CustomMessagingProvider">
+    <property name="name" value="default" />
+  </component>
+
+  <!-- HTTP通信用クライアント -->
+  <component name="defaultMessageSenderClient" class="nablarch.fw.messaging.realtime.http.client.StubHTTPMessagingClient">
+    <property name="userIdToFormatKey" value="userId" />
+  </component>
+
+  <!-- メッセージID採番クラス-->
+  <component name="defaultHttpMessageIdGenerator" class="nablarch.fw.messaging.StubHttpMessageIdGenerator">
+    <property name="name" value="default" />
+  </component>
+
+  <component name="nulltHttpMessageIdGenerator" class="nablarch.fw.messaging.NullHttpMessageIdGenerator">
+  </component>
+
+  <!-- SSL情報取得用クラス(任意項目)-->
+  <component name="nopSSLContextSettings" class="nablarch.fw.messaging.realtime.http.settings.NopHttpSSLContextSettings">
+  </component>
+  <component name="defaultSSLContextSettings" class="nablarch.fw.messaging.realtime.http.settings.DummyHttpSSLContextSettings">
+    <property name="name" value="default" />
+  </component>
+  <component name="customSSLContextSettings" class="nablarch.fw.messaging.realtime.http.settings.DummyHttpSSLContextSettings">
+    <property name="name" value="custom" />
+  </component>
+</component-configuration>

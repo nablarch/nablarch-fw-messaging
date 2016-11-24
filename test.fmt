@@ -1,0 +1,10 @@
+file-type:        "Fixed"
+text-encoding:    "utf-8"
+record-length:    210
+record-separator: "\n"
+
+[Book]
+1  ?filler      X(10)     # 未使用
+11  title       X(50)     # 書名
+61  publisher   X(50)     # 出版社
+111 authors     X(100)    # 著者
