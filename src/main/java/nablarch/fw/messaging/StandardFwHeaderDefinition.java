@@ -115,10 +115,6 @@ public class StandardFwHeaderDefinition implements FwHeaderDefinition {
         return this;
     }
 
-    /** メッセージフォーマット定義 */
-    private final ThreadLocal<DataRecordFormatter>
-        formatterForEachThread = new ThreadLocal<DataRecordFormatter>();
-
     /**
      * フレームワーク制御ヘッダーのフォーマット定義を返す。
      * @return フレームワーク制御ヘッダーのフォーマット定義
@@ -137,13 +133,8 @@ public class StandardFwHeaderDefinition implements FwHeaderDefinition {
      */
     public synchronized DataRecordFormatter getFormatter(FilePathSetting filePathSetting,
                                                          FormatterFactory formatterFactory) {
-        DataRecordFormatter formatter = formatterForEachThread.get();
-        if (formatter != null) {
-            return formatter;
-        }
         File formatFile = filePathSetting.getFileWithoutCreate(formatFileDir, formatFileName);
-        formatter = formatterFactory.createFormatter(formatFile);
-        formatterForEachThread.set(formatter);
+        DataRecordFormatter formatter = formatterFactory.createFormatter(formatFile);
         return formatter;
     }
 

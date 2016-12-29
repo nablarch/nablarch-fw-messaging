@@ -36,10 +36,6 @@ public class MessageReader implements DataReader<ReceivedMessage> {
     /** フォーマット定義ファイルの名前 */
     private String formatFileName = null;
     
-    /** メッセージフォーマット定義 */
-    private final ThreadLocal<DataRecordFormatter>
-        formatterForEachThread = new ThreadLocal<DataRecordFormatter>();
-    
     // ----------------------------------------------------- DataReader I/F
     /**
      * 受信電文を読み込む。
@@ -121,15 +117,11 @@ public class MessageReader implements DataReader<ReceivedMessage> {
      * @return フォーマッター
      */
     private DataRecordFormatter getFormatter() {
-        DataRecordFormatter formatter = formatterForEachThread.get();
-        if (formatter != null) {
-            return formatter;
-        }
         File formatFile = FilePathSetting
                          .getInstance()
                          .getFileWithoutCreate(formatFileDirName, formatFileName);
-        formatter = FormatterFactory.getInstance().createFormatter(formatFile);
-        formatterForEachThread.set(formatter);
+        DataRecordFormatter formatter = FormatterFactory.getInstance()
+                                                        .createFormatter(formatFile);
         return formatter;
     }
     
