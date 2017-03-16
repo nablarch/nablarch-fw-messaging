@@ -27,6 +27,17 @@ dependencies {
   compile "com.nablarch.framework:nablarch-fw-standalone:${nablarchFwStandaloneVersion}"
   compile "com.nablarch.framework:nablarch-core-dataformat:${nablarchCoreDataformatVersion}"
   compile "com.nablarch.framework:nablarch-common-idgenerator:${nablarchCommonIdgeneratorVersion}"
+
+  testCompile 'junit:junit:4.12'
+
+  testCompile 'com.nablarch.dev:nablarch-test-support:0.0.7'
+
+  testCompile 'com.nablarch.framework:nablarch-testing:1.0.7'
+  testCompile "com.nablarch.framework:nablarch-fw-batch:${nablarchFwBatchVersion}"
+  testCompile "com.nablarch.framework:nablarch-common-auth:${nablarchCommonAuthVersion}"
+  testCompile "com.nablarch.framework:nablarch-common-auth-jdbc:${nablarchCommonAuthJdbcVersion}"
+
+  testRuntime files('src/test/java/')
 }
 
 task wrapper(type: Wrapper) {
