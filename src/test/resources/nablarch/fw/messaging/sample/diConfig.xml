@@ -129,7 +129,7 @@
         <component class="nablarch.fw.handler.retry.CountingRetryContextFactory">
           <property name="maxRetryTime" value="300000" />
           <property name="retryCount" value="3" />
-          <property name="retryIntervals" value="5000" />
+          <property name="retryIntervals" value="1000" />
         </component>
       </property>
       <property name="retryLimitExceededFailureCode" value="RETRY_ERROR" />

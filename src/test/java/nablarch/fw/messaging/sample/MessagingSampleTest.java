@@ -5,6 +5,8 @@ import nablarch.core.dataformat.DataRecordFormatter;
 import nablarch.core.dataformat.FormatterFactory;
 import nablarch.core.log.app.OnMemoryLogWriter;
 import nablarch.core.repository.SystemRepository;
+import nablarch.core.repository.di.DiContainer;
+import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
 import nablarch.core.util.FilePathSetting;
 import nablarch.fw.launcher.CommandLine;
 import nablarch.fw.launcher.Main;
@@ -17,7 +19,7 @@ import nablarch.fw.messaging.provider.TestJmsMessagingProvider.Context.JmsHeader
 import nablarch.test.SystemPropertyResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -62,15 +64,25 @@ public class MessagingSampleTest {
         VariousDbTestHelper.delete(SampleSentMessage.class);
         VariousDbTestHelper.delete(BookData.class);
         VariousDbTestHelper.delete(ErrorLog.class);
+
+        setupServer();
     }
-    
+
+    @After
+    public void tearDown() throws Exception {
+        try {
+            TestEmbeddedMessagingProvider.stopServer();
+            serverRunning = false;
+            serverCausedError = false;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     /**MessagingSampleTest
      * 同期送受信の正常系処理
      */
     @Test public void testUsualRequestAndResponse() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);
 
         // --------------- 書籍一覧を取得(0件) ----------------------- //
@@ -158,9 +170,6 @@ public class MessagingSampleTest {
      * 再送要求処理(正常系)
      */
     @Test public void testResendingRequest() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);        
         
         // リストは空
@@ -234,9 +243,6 @@ public class MessagingSampleTest {
      * 再送要求処理のエラー応答がらみのテスト。
      */
     @Test public void testResendingRequestToWhicthServserRepliedAsError() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);        
         
         // データレコードと一致しないサマリーレコードをもつ登録要求電文を送信。
@@ -304,9 +310,6 @@ public class MessagingSampleTest {
      * 不正電文に対するエラー制御のテスト
      */
     @Test public void testHandlingOfInvalidRequest() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);        
         
         MessagingContext messaging = getMessagingContext();
@@ -328,9 +331,6 @@ public class MessagingSampleTest {
      */
     @Test
     public void testServiceTemporarilyStop() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);
         
         // リストは空
@@ -399,9 +399,6 @@ public class MessagingSampleTest {
      */
     @Test
     public void testHaltsRunningProcessIfProcessAbnormalEndErrorIsThrown() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);
         
         OnMemoryLogWriter.clear();
@@ -433,9 +430,6 @@ public class MessagingSampleTest {
      */
     @Test
     public void testTimoutOfReceivingThreads() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);
        
         // 何度か電文を送信してみる。
@@ -454,22 +448,22 @@ public class MessagingSampleTest {
         assertFalse(serverCausedError);
         assertEquals(0, resultCode.intValue()); //停止要求による停止は正常終了扱い。         
     }
-    
+
     /**
      * 要求電文の受信処理中にリトライ可能エラー(DBコネクションの切断など)
      * が発生するケース。
      */
     @Test
     public void testOccursRetriableError() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);
         OnMemoryLogWriter.clear();
 
         new RetryClient().execute(); // プロセス継続
+        Thread.sleep(1000);
         new RetryClient().execute(); // プロセス継続
+        Thread.sleep(1000);
         new RetryClient().execute(); // プロセス継続 (リトライ上限)
+        Thread.sleep(1000);
         new RetryClient().execute(); // プロセス異常停止 (リトライ上限超過)
         
         Thread.sleep(5000);
@@ -504,9 +498,6 @@ public class MessagingSampleTest {
      * 要求電文の受信処理中にシステムエラーが発生する場合の挙動の確認。
      */
     @Test public void testOccursErrorDuringWaitingForReplayMessage() throws Exception {
-        if (!serverRunning) {
-            setupServer();
-        }
         assertFalse(serverCausedError);
         
         Thread.sleep(3000);
@@ -520,8 +511,16 @@ public class MessagingSampleTest {
         assertFalse(serverRunning);
         assertFalse(serverCausedError);
         assertEquals(180, resultCode.intValue()); // ProcessAbnormalEnd
+
+        resetSystemRepository();
     }
-    
+
+    public void resetSystemRepository() throws Exception {
+        XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader("classpath:nablarch/fw/messaging/sample/diConfig.xml");
+        DiContainer container = new DiContainer(loader);
+        SystemRepository.load(container);
+    }
+
     private ReceivedMessage clientReceivedMessage = null;
     private SendingMessage  clientSentMessage = null;
     
@@ -595,18 +594,6 @@ public class MessagingSampleTest {
     private static boolean serverRunning     = false;
     private static boolean serverCausedError = false;
     private static Integer resultCode        = null;
-    
-    /**
-     * 内蔵メッセージングサーバを停止させる。
-     */
-    @AfterClass
-    public static void terminateServer() throws Exception {
-        try {
-            TestEmbeddedMessagingProvider.stopServer();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
     
     private MessagingContext getMessagingContext() throws Exception {
         MessagingProvider messagingProvider = null;
