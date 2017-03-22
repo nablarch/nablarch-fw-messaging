@@ -2,7 +2,6 @@ package nablarch.fw.messaging.handler;
 
 import nablarch.core.dataformat.DataRecordFormatter;
 import nablarch.core.dataformat.FormatterFactory;
-import nablarch.core.log.app.OnMemoryLogWriter;
 import nablarch.core.util.FilePathSetting;
 import nablarch.fw.DataReader;
 import nablarch.fw.DataReader.NoMoreRecord;
@@ -17,6 +16,7 @@ import nablarch.fw.messaging.ReceivedMessage;
 import nablarch.fw.messaging.RequestMessage;
 import nablarch.fw.messaging.ResponseMessage;
 import nablarch.fw.messaging.SendingMessage;
+import nablarch.test.support.log.app.OnMemoryLogWriter;
 import nablarch.test.support.tool.Hereis;
 import org.junit.Before;
 import org.junit.Test;

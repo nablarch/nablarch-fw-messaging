@@ -75,35 +75,6 @@
 	  </component>
     </property>
   </component>
-  
-  <!-- プロセス停止制御ハンドラ -->
-  <component
-    name="processStopHandler"
-    class="nablarch.fw.handler.BasicProcessStopHandler">
-    <property name="tableName"             value="PROCESS_STATUS" />
-    <property name="requestIdColumnName"   value="REQUEST_ID" />
-    <property name="processHaltColumnName" value="STATUS" />
-    <property name="dbTransactionManager" ref="tran">
-    </property>
-  </component>
-
-  <component name="serviceAvailability"
-             class="nablarch.common.availability.BasicServiceAvailability">
-    <!-- 開閉局機能で使用するテーブル名／カラム名／サービス提供可能状態の文字列。 -->
-    <property name="tableName" value="PROCESS_STATUS" />
-    <property name="requestTableRequestIdColumnName" value="REQUEST_ID" />
-    <property name="requestTableServiceAvailableColumnName"
-              value="SERVICE_AVAILABLE" />
-    <property name="dbManager" ref="serviceAvailabilityDbManager" />
-  </component>
-
-  <!-- データベーストランザクション管理クラスの設定 -->
-  <component name="serviceAvailabilityDbManager"
-      class="nablarch.core.db.transaction.SimpleDbTransactionManager" autowireType="None">
-    <property name="dbTransactionName" value="serviceAvailability" />
-    <property name="connectionFactory" ref="connectionFactory" />
-    <property name="transactionFactory" ref="jdbcTransactionFactory" />
-  </component>
 
   <!-- ハンドラーキュー構成 -->
   <list name="handlerQueue">
@@ -163,10 +134,7 @@
     
     <!-- データベース接続管理ハンドラ (リクエストスレッド用)  -->
     <component class="nablarch.common.handler.DbConnectionManagementHandler" />
-    
-    <!-- プロセス停止制御ハンドラ -->
-    <component-ref name="processStopHandler" />
-    
+
     <!-- メッセージコンテキスト管理ハンドラ -->
     <component class="nablarch.fw.messaging.handler.MessagingContextHandler" />
     
@@ -182,12 +150,6 @@
       <property name="immediate"   value="false" />
     </component>
 
-    <!-- 開閉局制御ハンドラ -->
-    <component class="nablarch.common.availability.ServiceAvailabilityCheckHandler">
-      <property name="serviceAvailability"   ref="serviceAvailability" />
-      <property name="usesInternalRequestId" value="false" />
-    </component>
-    
     <!-- トランザクション制御ハンドラ -->
     <component class="nablarch.common.handler.TransactionManagementHandler" /> 
         
@@ -204,40 +166,5 @@
 	    </property>
     </component>  
   </list>
-  
-  <component name="stringResourceHolder" class="nablarch.core.message.StringResourceHolder">
-    <property name="stringResourceCache" ref="dataCache">
-    </property>
-  </component>
-
-  <component name="dataCache" class="nablarch.core.cache.BasicStaticDataCache" autowireType="None">
-    <property name="loader">
-      <component class="nablarch.core.message.BasicStringResourceLoader">
-                <!-- メッセージリソーステーブル名 -->
-                <property name="tableName" value="MESSAGING_TEST_MESSAGE"/>
-                <!-- メッセージリソーステーブル IDカラム名 -->
-                <property name="idColumnName" value="MESSAGE_ID"/>
-                <!-- メッセージリソーステーブル 言語カラム名 -->
-                <property name="langColumnName" value="LANG"/>
-                <!-- メッセージリソーステーブル メッセージカラム名 -->
-                <property name="valueColumnName" value="MESSAGE"/>
-                <property name="dbManager" ref="serviceAvailabilityDbManager" />
-      </component>
-    </property>
-  </component>
-
-  <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
-    <!--
-      BasicApplicationInitializerのinitializeListプロパティ。
-      ここで記述した順序で初期化が実行される。
-    -->
-    <property name="initializeList">
-      <list>
-        <component-ref name="dataCache" />
-        <component-ref name="processStopHandler"/>
-        <component-ref name="serviceAvailability"/>
-      </list>
-    </property>
-  </component>
   
 </component-configuration>

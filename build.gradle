@@ -30,12 +30,8 @@ dependencies {
 
   testCompile 'junit:junit:4.12'
 
-  testCompile 'com.nablarch.dev:nablarch-test-support:0.0.7'
-
-  testCompile 'com.nablarch.framework:nablarch-testing:1.0.7'
-  testCompile "com.nablarch.framework:nablarch-fw-batch:${nablarchFwBatchVersion}"
-  testCompile "com.nablarch.framework:nablarch-common-auth:${nablarchCommonAuthVersion}"
-  testCompile "com.nablarch.framework:nablarch-common-auth-jdbc:${nablarchCommonAuthJdbcVersion}"
+  testCompile "com.nablarch.framework:nablarch-testing:${nablarchTestingVersion}"
+  testCompile "com.nablarch.framework:nablarch-common-jdbc:${nablarchCommonJdbcVersion}"
 
   testRuntime files('src/test/java/')
 }
