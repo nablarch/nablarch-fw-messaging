@@ -1,0 +1,8 @@
+nablarch.fw.messaging.action.Request
+nablarch.fw.messaging.handler.SentMessage
+nablarch.fw.messaging.handler.TblSentMessage
+nablarch.fw.messaging.sample.ProcessStatus
+nablarch.fw.messaging.sample.MessagingTestMessage
+nablarch.fw.messaging.sample.BookData
+nablarch.fw.messaging.sample.ErrorLog
+nablarch.fw.messaging.sample.SampleSentMessage
