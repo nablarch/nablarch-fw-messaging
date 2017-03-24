@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../../../../main/resources/component-configuration.xsd">
+
+  <!-- MessageSenderの設定情報 -->
+  <config-file file="classpath:nablarch/fw/messaging/MessageSenderSettingsTest_invalid3.config" />
+
+  <component name="filePathSetting"
+             class="nablarch.core.util.FilePathSetting">
+    <property name="basePathSettings">
+      <map>
+        <entry key="format" value="classpath:nablarch/fw/messaging/format" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+  </component>
+
+  <component name="dummy" class="nablarch.fw.messaging.CustomMessagingProvider">
+    <property name="name" value="dummy" />
+  </component>
+
+</component-configuration>

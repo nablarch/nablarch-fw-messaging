@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <import file="db-default.xml" />
+  
+  <!-- リクエストID抽出の実装 -->
+  <component name="requestIdExtractor" class="nablarch.common.util.ShortRequestIdExtractor" />
+
+  <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
+    <property name="basePathSettings">
+      <map>
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+  </component>
+
+  <list name="handlerQueue">
+
+    <!-- グローバルエラーハンドラ -->
+    <component class="nablarch.fw.handler.GlobalErrorHandler" />
+
+    <!-- HTTPレスポンスハンドラ -->
+    <component name="httpResponseHandler" class="nablarch.fw.web.handler.HttpResponseHandler">
+      <property name="forceFlushAfterWritingHeaders" value="true" />
+      <property name="contentPathRule">
+        <component class="nablarch.fw.web.i18n.DirectoryBasedResourcePathRule">
+          <property name="servletContextCreator">
+            <component class="nablarch.fw.web.i18n.MockServletContextCreator" />
+          </property>
+        </component>
+      </property>
+    </component>
+
+    <!-- スレッドコンテキスト変数設定ハンドラ(リクエストスレッド) -->
+    <component class="nablarch.common.handler.threadcontext.ThreadContextHandler">
+      <property name="attributes">
+        <list>
+
+          <!-- リクエストID -->
+          <component class="nablarch.common.handler.threadcontext.RequestIdAttribute" />
+          <!-- 内部リクエストID -->
+          <component class="nablarch.common.handler.threadcontext.InternalRequestIdAttribute" />
+          <!-- 言語 -->
+          <component name="languageAttribute"
+              class="nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie">
+            <property name="defaultLanguage" value="ja" />
+            <property name="supportedLanguages" value="ja,en" />
+            <property name="cookieMaxAge" value="7776000" /><!-- 90 days -->
+          </component>
+
+          <!-- 実行時ID -->
+          <component class="nablarch.common.handler.threadcontext.ExecutionIdAttribute" />
+          <!-- タイムゾーン -->
+          <component class="nablarch.common.handler.threadcontext.TimeZoneAttribute">
+            <property name="defaultTimeZone" value="Asia/Tokyo" />
+          </component>
+        </list>
+      </property>
+    </component>
+
+    <!-- HTTPエラーハンドラ -->
+    <component name="httpMessagingErrorHandler" class="nablarch.fw.messaging.handler.TestHttpMessagingErrorHandler">
+      <property name="defaultPages">
+        <map>
+          <entry key="503" value="/503.jsp" />
+          <entry key="400" value="/400.jsp" />
+          <entry key="413" value="/413.jsp" />
+          <entry key="500" value="/500.jsp" />
+          <entry key="404" value="/404.jsp" />
+        </map>
+      </property>
+    </component>
+
+    <!-- HTTPメッセージ解析 -->
+    <component name="httpMessagingRequestParsingHandler" class="nablarch.fw.messaging.handler.TestHttpMessagingRequestParsingHandler">
+      <property name="fwHeaderDefinition" ref="fwHeaderDefinition" />
+      <property name="bodyLengthLimit" value="1048576" /><!-- 1Mbyte -->
+    </component>
+
+    <!-- リクエストパスマッピング -->
+    <component class="nablarch.fw.handler.RequestPathJavaPackageMapping">
+      <property name="basePackage" value="nablarch.fw.messaging.action" />
+      <property name="immediate" value="false" />
+    </component>
+
+    <!-- DB接続 -->
+    <component class="nablarch.common.handler.DbConnectionManagementHandler">
+    </component>
+    
+    <!-- 応答電文構築 -->
+    <component name="httpMessagingResponseBuildingHandler" class="nablarch.fw.messaging.handler.TestHttpMessagingResponseBuildingHandler">
+      <property name="fwHeaderDefinition" ref="fwHeaderDefinition" />
+    </component>
+
+    <!-- トランザクション -->
+    <component class="nablarch.common.handler.TransactionManagementHandler">
+    </component>
+    
+    <!-- 応答電文構築 -->
+    <component-ref name="handlerQueue.httpMessagingResponseBuildingHandler" />
+    
+    <!-- 再送制御ハンドラ -->
+    <component name="messageResendHandler" class="nablarch.fw.messaging.handler.MessageResendHandler" />
+    
+  </list>
+
+  <component name="validationManager" class="nablarch.core.validation.ValidationManager">
+    <property name="convertors">
+      <list>
+        <component class="nablarch.core.validation.convertor.StringConvertor">
+          <property name="conversionFailedMessageId" value="MSG90001" />
+          <property name="allowNullValue" value="true" />
+        </component>
+      </list>
+    </property>
+    <property name="validators">
+      <list>
+      </list>
+    </property>
+    <property name="formDefinitionCache" ref="formDefinitionCache">
+    </property>
+  </component>
+
+  <!-- バリデーション情報のキャッシュ -->
+  <component name="formDefinitionCache" class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader">
+      <component class="nablarch.core.validation.FormValidationDefinitionLoader" />
+    </property>
+  </component>
+
+  <!-- FW制御ヘッダー定義 -->
+  <component name = "fwHeaderDefinition"
+    class = "nablarch.fw.messaging.reader.StructuredFwHeaderDefinition">
+    <property name = "fwHeaderKeys">
+      <map>
+        <entry key="userId"     value="fw.id"/>
+        <entry key="resendFlag" value="fw.resent"/>
+        <entry key="requestId"  value="fw.requestId"/>
+        <entry key="statusCode"  value="fw.statusCode"/>
+      </map>
+    </property>
+  </component>
+
+  <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <component-ref name="formDefinitionCache" />
+        <component-ref name="validationManager" />
+      </list>
+    </property>
+  </component>
+</component-configuration>
