@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -81,7 +82,7 @@ public class MessagingActionTest {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Rule
-    public Timeout timeout = new Timeout(600000);
+    public Timeout timeout = new Timeout(600000, TimeUnit.MILLISECONDS);
 
     @BeforeClass
     public static void setupClass() throws Exception {
