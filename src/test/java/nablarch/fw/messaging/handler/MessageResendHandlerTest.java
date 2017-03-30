@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -48,7 +49,7 @@ public class MessageResendHandlerTest {
 
     /** 180秒で終わって欲しい */
     @Rule
-    public Timeout timeout = new Timeout(180000);
+    public Timeout timeout = new Timeout(180000, TimeUnit.MILLISECONDS);
 
     @BeforeClass
     public static void setUpClass() {
