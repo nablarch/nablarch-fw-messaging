@@ -5,8 +5,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.List;
-
 import nablarch.fw.messaging.provider.TestEmbeddedMessagingProvider;
 import nablarch.test.support.log.app.OnMemoryLogWriter;
 
@@ -70,7 +68,7 @@ public class MessagingContextTest {
 
             @Override
             public ReceivedMessage receiveMessage(final String receiveQueue, final String messageId, final long timeout) {
-                // タイムアウトをとするためにnullを返す
+                // タイムアウトとするためにnullを返す
                 return null;
             }
 
