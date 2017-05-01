@@ -131,7 +131,7 @@ public abstract class MessagingContext implements Closeable {
         if (reply == null) {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.logInfo(
-                    "response timeout: could not receive a reply to the message below within " + timeout + "msec. "
+                    "response timeout: could not receive a reply to the message below."
                     + MessagingLogUtil.getSentMessageLog(message));
             }
         }
