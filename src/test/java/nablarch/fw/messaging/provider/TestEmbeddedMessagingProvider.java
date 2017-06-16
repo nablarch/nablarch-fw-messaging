@@ -64,6 +64,7 @@ public class TestEmbeddedMessagingProvider extends TestJmsMessagingProvider impl
      *          起動が完了しなかった場合。
      */
     public static void waitUntilServerStarted() throws InterruptedException {
+        TimeUnit.MILLISECONDS.sleep(500);
         if (server != null) {
             server.waitUntilStarted();
         }
