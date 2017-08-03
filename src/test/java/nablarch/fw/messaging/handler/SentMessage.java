@@ -25,7 +25,7 @@ public class SentMessage {
 	}
 
 	@Id
-    @Column(name = "MESSAGE_ID", length = 64, nullable = false)
+    @Column(name = "MESSAGE_ID", length = 255, nullable = false)
     public String messageId;
 
 	@Id
