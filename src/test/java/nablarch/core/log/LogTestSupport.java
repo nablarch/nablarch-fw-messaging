@@ -1,10 +1,9 @@
 package nablarch.core.log;
 
+import java.io.PrintStream;
+
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
-
-import java.io.PrintStream;
 
 public class LogTestSupport {
 

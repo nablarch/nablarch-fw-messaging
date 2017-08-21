@@ -1,5 +1,16 @@
 package nablarch.fw.messaging.sample;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import nablarch.core.dataformat.DataRecord;
 import nablarch.core.dataformat.DataRecordFormatter;
 import nablarch.core.dataformat.FormatterFactory;
@@ -15,27 +26,15 @@ import nablarch.fw.messaging.ReceivedMessage;
 import nablarch.fw.messaging.SendingMessage;
 import nablarch.fw.messaging.provider.TestEmbeddedMessagingProvider;
 import nablarch.fw.messaging.provider.TestJmsMessagingProvider.Context.JmsHeaderName;
-import nablarch.test.SystemPropertyResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
 import nablarch.test.support.log.app.OnMemoryLogWriter;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 /**
  * メッセージ同期送信関連機能の結合テスト
@@ -45,9 +44,6 @@ import static org.junit.Assert.assertNull;
 @SuppressWarnings("serial")
 @RunWith(DatabaseTestRunner.class)
 public class MessagingSampleTest {
-
-    @Rule
-    public final SystemPropertyResource systemPropertyResource = new SystemPropertyResource();
 
     @BeforeClass
     public static void setupClass() throws Exception {
@@ -76,6 +72,8 @@ public class MessagingSampleTest {
             serverCausedError = false;
         } catch (Exception e) {
             throw e;
+        } finally {
+            System.clearProperty("receiveQueueName");
         }
     }
 

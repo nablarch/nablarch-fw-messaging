@@ -1,5 +1,9 @@
 package nablarch.fw.messaging.action;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import nablarch.core.ThreadContext;
 import nablarch.core.db.connection.AppDbConnection;
 import nablarch.core.db.connection.DbConnectionContext;
@@ -15,11 +19,6 @@ import nablarch.core.validation.ValidationUtil;
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.messaging.RequestMessage;
 import nablarch.fw.messaging.ResponseMessage;
-import nablarch.fw.messaging.action.MessagingAction;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * Httpメッセージングの機能テストで使用するアクション

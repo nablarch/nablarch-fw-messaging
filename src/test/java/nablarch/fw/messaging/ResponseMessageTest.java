@@ -1,5 +1,14 @@
 package nablarch.fw.messaging;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 import nablarch.core.dataformat.DataRecord;
 import nablarch.core.dataformat.DataRecordFormatter;
 import nablarch.core.dataformat.FormatterFactory;
@@ -8,17 +17,8 @@ import nablarch.core.util.FilePathSetting;
 import nablarch.core.util.MapUtil;
 import nablarch.fw.messaging.StructuredResponseMessageTest.TestData;
 import nablarch.test.support.tool.Hereis;
+
 import org.junit.Test;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * {@link ResponseMessage}のテスト。
