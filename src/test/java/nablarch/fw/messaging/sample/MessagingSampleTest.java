@@ -505,7 +505,7 @@ public class MessagingSampleTest {
         while(messagingProvider == null) {
             // リポジトリの初期化が間に合わない場合がある。
             messagingProvider = SystemRepository.get("messagingProvider");
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         }
         return messagingProvider.createContext();
     }
