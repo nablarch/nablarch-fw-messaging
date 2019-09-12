@@ -322,6 +322,8 @@ public class MessagingSampleTest {
                                  .readRecord();
         // エラー応答電文が返る。
         assertEquals("500", header.get("statusCode"));
+
+        messaging.close();
     }
 
     /**
@@ -380,8 +382,28 @@ public class MessagingSampleTest {
             Thread.sleep(1000);
         }
 
+        // 最大30秒retryCount1～3が出力されるのを待つ。
+        for (int i = 0; i < 30; i++) {
+            List<String> logs = OnMemoryLogWriter.getMessages("writer.appLog");
+            String appLog = logs.toString();
+            if (appLog.contains("retryCount[1]")
+                    && appLog.contains("retryCount[2]")
+                    && appLog.contains("retryCount[3]")) {
+                break;
+            }
+            Thread.sleep(1000);
+        }
+
+        // テスト失敗時の解析のためアプリログを出力
+        List<String> logs = OnMemoryLogWriter.getMessages("writer.appLog");
+        System.out.println("testOccursRetriableErrorのアプリログ開始*******************************************************************");
+        for (String log : logs) {
+            System.out.println("*****" + log);
+        }
+        System.out.println("testOccursRetriableErrorのアプリログ終了*******************************************************************");
+
         // FATALログの出力は1回のみ
-        List<String> logs = OnMemoryLogWriter.getMessages("writer.monitorLog");
+        logs = OnMemoryLogWriter.getMessages("writer.monitorLog");
         List<String> fatalLogs = new ArrayList<String>();
         for (String log : logs) {
             if (log.contains("FATAL")) {
@@ -512,7 +534,7 @@ public class MessagingSampleTest {
         while(messagingProvider == null) {
             // リポジトリの初期化が間に合わない場合がある。
             messagingProvider = SystemRepository.get("messagingProvider");
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         }
         return messagingProvider.createContext();
     }
@@ -537,6 +559,8 @@ public class MessagingSampleTest {
 
             MessagingSampleTest.this.clientReceivedMessage = reply;
             MessagingSampleTest.this.clientSentMessage = message;
+
+            messaging.close();
         }
     }
 
@@ -611,6 +635,8 @@ public class MessagingSampleTest {
             ReceivedMessage reply = messaging.sendSync(message);
             MessagingSampleTest.this.clientReceivedMessage = reply;
             MessagingSampleTest.this.clientSentMessage = message;
+
+            messaging.close();
         }
 
         public void execute2() throws Exception {
@@ -642,6 +668,8 @@ public class MessagingSampleTest {
             ReceivedMessage reply = messaging.sendSync(message);
             MessagingSampleTest.this.clientReceivedMessage = reply;
             MessagingSampleTest.this.clientSentMessage = message;
+
+            messaging.close();
         }
     }
 
@@ -665,6 +693,8 @@ public class MessagingSampleTest {
 
             MessagingSampleTest.this.clientReceivedMessage = reply;
             MessagingSampleTest.this.clientSentMessage = message;
+
+            messaging.close();
         }
     }
 
@@ -688,6 +718,8 @@ public class MessagingSampleTest {
 
             MessagingSampleTest.this.clientReceivedMessage = reply;
             MessagingSampleTest.this.clientSentMessage = message;
+
+            messaging.close();
         }
     }
 }
