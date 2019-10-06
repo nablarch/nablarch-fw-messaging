@@ -30,10 +30,8 @@ import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
 import nablarch.test.support.log.app.OnMemoryLogWriter;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 /**
@@ -44,6 +42,9 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("serial")
 @RunWith(DatabaseTestRunner.class)
 public class MessagingSampleTest {
+    /** テストメソッド名取得ルール */
+    @Rule
+    public TestName testName = new TestName();
 
     @BeforeClass
     public static void setupClass() throws Exception {
@@ -57,6 +58,8 @@ public class MessagingSampleTest {
 
     @Before
     public void setup() throws Exception {
+        System.out.println("nablarch.fw.messaging.sample.MessagingSampleTest#" + testName.getMethodName() + " start -------------------------------------------------------------------");
+
         VariousDbTestHelper.delete(SampleSentMessage.class);
         VariousDbTestHelper.delete(BookData.class);
         VariousDbTestHelper.delete(ErrorLog.class);
@@ -381,6 +384,14 @@ public class MessagingSampleTest {
             }
             Thread.sleep(1000);
         }
+
+        // テスト失敗時の解析のためモニターログを出力
+        List<String> monitorLogs = OnMemoryLogWriter.getMessages("writer.monitorLog");
+        System.out.println("testOccursRetriableErrorのモニターログ開始*******************************************************************");
+        for (String log : monitorLogs) {
+            System.out.println("*****" + log);
+        }
+        System.out.println("testOccursRetriableErrorのモニターログ終了*******************************************************************");
 
         // 最大30秒retryCount1～3が出力されるのを待つ。
         for (int i = 0; i < 30; i++) {
