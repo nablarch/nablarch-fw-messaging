@@ -170,6 +170,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * @param message 電文オブジェクト
      * @return ログ文字列
      */
+    @Override
     public String getSentMessageLog(SendingMessage message) {
         return support.getStructuredMessage(sentMessageTargets, new MessagingLogContext(message));
     }
@@ -179,6 +180,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * @param message 電文オブジェクト
      * @return ログ文字列
      */
+    @Override
     public String getReceivedMessageLog(ReceivedMessage message) {
         return support.getStructuredMessage(receivedMessageTargets, new MessagingLogContext(message));
     }
@@ -189,6 +191,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * @param charset 出力に使用する文字セット
      * @return ログ文字列
      */
+    @Override
     public String getHttpSentMessageLog(SendingMessage message, Charset charset) {
         return support.getStructuredMessage(httpSentMessageTargets, new MessagingLogContext(message, charset));
     }
@@ -199,6 +202,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * @param charset 出力に使用する文字セット
      * @return ログ文字列
      */
+    @Override
     public String getHttpReceivedMessageLog(ReceivedMessage message, Charset charset) {
         return support.getStructuredMessage(httpReceivedMessageTargets, new MessagingLogContext(message, charset));
     }
