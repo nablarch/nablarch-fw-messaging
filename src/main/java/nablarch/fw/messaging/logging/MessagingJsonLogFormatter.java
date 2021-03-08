@@ -74,7 +74,8 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     private List<JsonLogObjectBuilder<MessagingLogContext>> httpSentMessageTargets;
     /** リクエスト処理終了時のフォーマット済みのログ出力項目 */
     private List<JsonLogObjectBuilder<MessagingLogContext>> httpReceivedMessageTargets;
-    
+
+    /** 各種ログのJSONフォーマット支援オブジェクト */
     private JsonLogFormatterSupport support;
 
     /**
