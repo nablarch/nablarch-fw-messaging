@@ -12,17 +12,24 @@ import nablarch.test.support.tool.Hereis;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThrows;
 
+/**
+ * {@link MessagingJsonLogFormatter}のテストクラス。
+ *
+ * @author Shuji Kitamura
+ */
 public class MessagingJsonLogFormatterTest extends LogTestSupport {
 
     @Before
@@ -134,11 +141,18 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     /**
      * 不正なターゲットのテスト。
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testIllegalTargets() {
         System.setProperty("messagingLogFormatter.sentMessageTargets", "threadName,messageId,dummy,messageBody");
 
-        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+        Exception e = assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
+            @Override
+            public void run() throws Throwable {
+                MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+            }
+        });
+
+        assertThat(e.getMessage(), is("[dummy] is unknown target. property name = [messagingLogFormatter.sentMessageTargets]"));
     }
 
     /**

@@ -104,6 +104,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
 
     /**
      * フォーマット対象のログ出力項目を取得する。
+     * @param props 各種ログ出力の設定情報
      * @return フォーマット対象のログ出力項目
      */
     protected Map<String, JsonLogObjectBuilder<MessagingLogContext>> getObjectBuilders(Map<String, String> props) {
@@ -136,7 +137,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * @param defaultTargets デフォルトの出力項目
      * @return ログ出力項目
      */
-    protected List<JsonLogObjectBuilder<MessagingLogContext>> getStructuredTargets(
+    private List<JsonLogObjectBuilder<MessagingLogContext>> getStructuredTargets(
             Map<String, JsonLogObjectBuilder<MessagingLogContext>> objectBuilders,
             Map<String, String> props,
             String targetsPropName, String defaultTargets) {
@@ -216,6 +217,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_THREAD_NAME, Thread.currentThread().getName());
         }
@@ -230,6 +232,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_MESSAGE_ID, context.getMessage().getMessageId());
         }
@@ -244,6 +247,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_DESTINATION, context.getMessage().getDestination());
         }
@@ -258,6 +262,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_CORRELATION_ID, context.getMessage().getCorrelationId());
         }
@@ -272,6 +277,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_REPLY_TO, context.getMessage().getReplyTo());
         }
@@ -286,6 +292,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             if (!(context.getMessage() instanceof SendingMessage)) {
                 structuredObject.put(TARGET_NAME_TIME_TO_LIVE, null);
@@ -320,11 +327,12 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_MESSAGE_BODY, getMaskedBodyText(context));
         }
 
-        public String getMaskedBodyText(MessagingLogContext context) {
+        protected String getMaskedBodyText(MessagingLogContext context) {
             InterSystemMessage<?> message = context.getMessage();
 
             Charset charset = context.getCharset();
@@ -399,8 +407,9 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
-            String bodyString = super.getMaskedBodyText(context);
+            String bodyString = getMaskedBodyText(context);
             if (StringUtil.isNullOrEmpty(bodyString)) {
                 structuredObject.put(TARGET_NAME_MESSAGE_BODY_HEX, "");
             } else {
@@ -421,6 +430,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_MESSAGE_BODY_LENGTH, context.getMessage().getBodyBytes().length);
         }
@@ -435,6 +445,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
             structuredObject.put(TARGET_NAME_MESSAGE_HEADER, context.getMessage().getHeaderMap());
         }
