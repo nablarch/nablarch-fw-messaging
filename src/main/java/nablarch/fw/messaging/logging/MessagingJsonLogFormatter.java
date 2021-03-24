@@ -5,6 +5,7 @@ import nablarch.core.dataformat.FixedLengthDataRecordFormatter;
 import nablarch.core.log.app.AppLogUtil;
 import nablarch.core.log.app.JsonLogFormatterSupport;
 import nablarch.core.log.basic.JsonLogObjectBuilder;
+import nablarch.core.text.json.JsonSerializationSettings;
 import nablarch.core.util.StringUtil;
 import nablarch.fw.messaging.InterSystemMessage;
 import nablarch.fw.messaging.ReceivedMessage;
@@ -92,7 +93,8 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      */
     protected void initialize(Map<String, String> props) {
 
-        support = new JsonLogFormatterSupport(PROPS_PREFIX, null);
+        support = new JsonLogFormatterSupport(
+                new JsonSerializationSettings(props, PROPS_PREFIX, AppLogUtil.getFilePath()));
 
         Map<String, JsonLogObjectBuilder<MessagingLogContext>> objectBuilders = getObjectBuilders(props);
 
