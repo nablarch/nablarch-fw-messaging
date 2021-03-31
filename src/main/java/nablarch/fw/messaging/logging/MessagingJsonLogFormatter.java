@@ -13,7 +13,12 @@ import nablarch.fw.messaging.SendingMessage;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +29,8 @@ import java.util.regex.Pattern;
  */
 public class MessagingJsonLogFormatter extends MessagingLogFormatter {
 
+    /** ラベルの項目名 */
+    private static final String TARGET_NAME_LABEL = "label";
     /** 出力項目(スレッド名)の項目名 */
     private static final String TARGET_NAME_THREAD_NAME = "threadName";
     /** 出力項目(メッセージID)の項目名 */
@@ -54,18 +61,36 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     /** HTTP受信メッセージの出力項目のプロパティ名 */
     private static final String PROPS_HTTP_RECEIVED_MESSAGE_TARGETS = PROPS_PREFIX + "httpReceivedMessageTargets";
 
+    /** MOM送信メッセージのラベルのプロパティ名 */
+    private static final String PROPS_SENT_MESSAGE_LABEL = PROPS_PREFIX + "sentMessageLabel";
+    /** MOM受信メッセージのラベルのプロパティ名 */
+    private static final String PROPS_RECEIVED_MESSAGE_LABEL = PROPS_PREFIX + "receivedMessageLabel";
+    /** HTTP送信メッセージのラベルのプロパティ名 */
+    private static final String PROPS_HTTP_SENT_MESSAGE_LABEL = PROPS_PREFIX + "httpSentMessageLabel";
+    /** HTTP受信メッセージのラベルのプロパティ名 */
+    private static final String PROPS_HTTP_RECEIVED_MESSAGE_LABEL = PROPS_PREFIX + "httpReceivedMessageLabel";
+
     /** デフォルトのMOM送信メッセージの出力項目 */
     private static final String DEFAULT_SENT_MESSAGE_TARGETS
-            = "threadName,messageId,destination,correlationId,replyTo,timeToLive,messageBody";
+            = "label,threadName,messageId,destination,correlationId,replyTo,timeToLive,messageBody";
     /** デフォルトのMOM受信メッセージの出力項目 */
     private static final String DEFAULT_RECEIVED_MESSAGE_TARGETS
-            = "threadName,messageId,destination,correlationId,replyTo,messageBody";
+            = "label,threadName,messageId,destination,correlationId,replyTo,messageBody";
     /** デフォルトのHTTP送信メッセージの出力項目 */
     private static final String DEFAULT_HTTP_SENT_MESSAGE_TARGETS
-            = "threadName,messageId,destination,correlationId,messageHeader,messageBody";
+            = "label,threadName,messageId,destination,correlationId,messageHeader,messageBody";
     /** デフォルトのHTTP受信メッセージの出力項目 */
     private static final String DEFAULT_HTTP_RECEIVED_MESSAGE_TARGETS
-            = "threadName,messageId,destination,correlationId,messageHeader,messageBody";
+            = "label,threadName,messageId,destination,correlationId,messageHeader,messageBody";
+
+    /** デフォルトのMOM送信メッセージのラベル */
+    private static final String DEFAULT_SENT_MESSAGE_LABEL = "SENT MESSAGE";
+    /** デフォルトのMOM受信メッセージのラベル */
+    private static final String DEFAULT_RECEIVED_MESSAGE_LABEL = "RECEIVED MESSAGE";
+    /** デフォルトのHTTP送信メッセージのラベル */
+    private static final String DEFAULT_HTTP_SENT_MESSAGE_LABEL = "HTTP SENT MESSAGE";
+    /** デフォルトのHTTP受信メッセージのラベル */
+    private static final String DEFAULT_HTTP_RECEIVED_MESSAGE_LABEL = "HTTP RECEIVED MESSAGE";
 
     /** リクエスト処理開始時のフォーマット済みのログ出力項目 */
     private List<JsonLogObjectBuilder<MessagingLogContext>> sentMessageTargets;
@@ -98,9 +123,20 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
 
         Map<String, JsonLogObjectBuilder<MessagingLogContext>> objectBuilders = getObjectBuilders(props);
 
+        String label = getProp(props, PROPS_SENT_MESSAGE_LABEL, DEFAULT_SENT_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
         sentMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_SENT_MESSAGE_TARGETS, DEFAULT_SENT_MESSAGE_TARGETS);
+
+        label = getProp(props, PROPS_RECEIVED_MESSAGE_LABEL, DEFAULT_RECEIVED_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
         receivedMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_RECEIVED_MESSAGE_TARGETS, DEFAULT_RECEIVED_MESSAGE_TARGETS);
+
+        label = getProp(props, PROPS_HTTP_SENT_MESSAGE_LABEL, DEFAULT_HTTP_SENT_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
         httpSentMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_HTTP_SENT_MESSAGE_TARGETS, DEFAULT_HTTP_SENT_MESSAGE_TARGETS);
+
+        label = getProp(props, PROPS_HTTP_RECEIVED_MESSAGE_LABEL, DEFAULT_HTTP_RECEIVED_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
         httpReceivedMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_HTTP_RECEIVED_MESSAGE_TARGETS, DEFAULT_HTTP_RECEIVED_MESSAGE_TARGETS);
     }
 
@@ -198,6 +234,31 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     @Override
     public String getHttpReceivedMessageLog(ReceivedMessage message, Charset charset) {
         return support.getStructuredMessage(httpReceivedMessageTargets, new MessagingLogContext(message, charset));
+    }
+
+    /**
+     * ラベルを処理するクラス。
+     * @author Shuji Kitamura
+     */
+    private static class LabelBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+
+        private final String label;
+
+        /**
+         * コンストラクタ。
+         * @param label ラベル
+         */
+        LabelBuilder(String label) {
+            this.label = label;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
+            structuredObject.put(TARGET_NAME_LABEL, label);
+        }
     }
 
     /**

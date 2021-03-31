@@ -316,7 +316,7 @@ public class MessagingLogFormatter {
      * @param defaultValue プロパティのデフォルト値
      * @return プロパティ
      */
-    private String getProp(Map<String, String> props, String propName, String defaultValue) {
+    protected String getProp(Map<String, String> props, String propName, String defaultValue) {
         String value = props.get(propName);
         return value != null ? value : defaultValue;
     }

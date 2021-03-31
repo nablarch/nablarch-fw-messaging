@@ -61,6 +61,7 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
         String log = formatter.getSentMessageLog(message);
         assertThat(log.startsWith("$JSON$"), is(true));
         assertThat(log.substring(6), isJson(allOf(
+                withJsonPath("$", hasEntry("label", "SENT MESSAGE")),
                 withJsonPath("$", hasEntry("threadName", Thread.currentThread().getName())),
                 withJsonPath("$", hasEntry("messageId", "messagingIdTest")),
                 withJsonPath("$", hasEntry("destination", "destinationTest")),
@@ -82,6 +83,7 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
         String log = formatter.getReceivedMessageLog(message);
         assertThat(log.startsWith("$JSON$"), is(true));
         assertThat(log.substring(6), isJson(allOf(
+                withJsonPath("$", hasEntry("label", "RECEIVED MESSAGE")),
                 withJsonPath("$", hasEntry("threadName", Thread.currentThread().getName())),
                 withJsonPath("$", hasEntry("messageId", "messagingIdTest")),
                 withJsonPath("$", hasEntry("destination", "destinationTest")),
@@ -105,6 +107,7 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
         String log = formatter.getHttpSentMessageLog(message, getCharsetFromMessage(message));
         assertThat(log.startsWith("$JSON$"), is(true));
         assertThat(log.substring(6), isJson(allOf(
+                withJsonPath("$", hasEntry("label", "HTTP SENT MESSAGE")),
                 withJsonPath("$", hasEntry("threadName", Thread.currentThread().getName())),
                 withJsonPath("$", hasEntry("messageId", "messagingIdTest")),
                 withJsonPath("$", hasEntry("destination", "destinationTest")),
@@ -128,6 +131,7 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
         String log = formatter.getHttpReceivedMessageLog(message, getCharsetFromMessage(message));
         assertThat(log.startsWith("$JSON$"), is(true));
         assertThat(log.substring(6), isJson(allOf(
+                withJsonPath("$", hasEntry("label", "HTTP RECEIVED MESSAGE")),
                 withJsonPath("$", hasEntry("threadName", Thread.currentThread().getName())),
                 withJsonPath("$", hasEntry("messageId", "messagingIdTest")),
                 withJsonPath("$", hasEntry("destination", "destinationTest")),
