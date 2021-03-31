@@ -45,25 +45,25 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     /** 出力項目(メッセージヘッダ)の項目名 */
     private static final String TARGET_NAME_MESSAGE_HEADER = "messageHeader";
 
-    /** リクエスト処理開始時の出力項目を取得する際に使用するプロパティ名 */
+    /** MOM送信メッセージの出力項目のプロパティ名 */
     private static final String PROPS_SENT_MESSAGE_TARGETS = PROPS_PREFIX + "sentMessageTargets";
-    /** hiddenパラメータ復号後の出力項目を取得する際に使用するプロパティ名 */
+    /** MOM受信メッセージの出力項目のプロパティ名 */
     private static final String PROPS_RECEIVED_MESSAGE_TARGETS = PROPS_PREFIX + "receivedMessageTargets";
-    /** ディスパッチ先クラス決定後の出力項目を取得する際に使用するプロパティ名 */
+    /** HTTP送信メッセージの出力項目のプロパティ名 */
     private static final String PROPS_HTTP_SENT_MESSAGE_TARGETS = PROPS_PREFIX + "httpSentMessageTargets";
-    /** リクエスト処理終了時の出力項目を取得する際に使用するプロパティ名 */
+    /** HTTP受信メッセージの出力項目のプロパティ名 */
     private static final String PROPS_HTTP_RECEIVED_MESSAGE_TARGETS = PROPS_PREFIX + "httpReceivedMessageTargets";
 
-    /** デフォルトのリクエスト処理開始時のフォーマット */
+    /** デフォルトのMOM送信メッセージの出力項目 */
     private static final String DEFAULT_SENT_MESSAGE_TARGETS
             = "threadName,messageId,destination,correlationId,replyTo,timeToLive,messageBody";
-    /** デフォルトのhiddenパラメータ復号後のフォーマット */
+    /** デフォルトのMOM受信メッセージの出力項目 */
     private static final String DEFAULT_RECEIVED_MESSAGE_TARGETS
             = "threadName,messageId,destination,correlationId,replyTo,messageBody";
-    /** デフォルトのディスパッチ先クラス決定後のフォーマット */
+    /** デフォルトのHTTP送信メッセージの出力項目 */
     private static final String DEFAULT_HTTP_SENT_MESSAGE_TARGETS
             = "threadName,messageId,destination,correlationId,messageHeader,messageBody";
-    /** デフォルトのリクエスト処理終了時のフォーマット */
+    /** デフォルトのHTTP受信メッセージの出力項目 */
     private static final String DEFAULT_HTTP_RECEIVED_MESSAGE_TARGETS
             = "threadName,messageId,destination,correlationId,messageHeader,messageBody";
 
@@ -169,9 +169,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     }
 
     /**
-     * 同期送信処理開始時に出力されるログ文字列を生成する。
-     * @param message 電文オブジェクト
-     * @return ログ文字列
+     * {@inheritDoc}
      */
     @Override
     public String getSentMessageLog(SendingMessage message) {
@@ -179,9 +177,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     }
 
     /**
-     * 同期送信処理開始時に出力されるログ文字列を生成する。
-     * @param message 電文オブジェクト
-     * @return ログ文字列
+     * {@inheritDoc}
      */
     @Override
     public String getReceivedMessageLog(ReceivedMessage message) {
@@ -189,10 +185,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     }
 
     /**
-     * 同期送信処理開始時に出力されるログ文字列を生成する。
-     * @param message 電文オブジェクト
-     * @param charset 出力に使用する文字セット
-     * @return ログ文字列
+     * {@inheritDoc}
      */
     @Override
     public String getHttpSentMessageLog(SendingMessage message, Charset charset) {
@@ -200,10 +193,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     }
 
     /**
-     * 同期送信処理開始時に出力されるログ文字列を生成する。
-     * @param message 電文オブジェクト
-     * @param charset 出力に使用する文字セット
-     * @return ログ文字列
+     * {@inheritDoc}
      */
     @Override
     public String getHttpReceivedMessageLog(ReceivedMessage message, Charset charset) {
