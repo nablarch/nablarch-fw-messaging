@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * メッセージ送受信処理の中でログ出力を行うクラス。
+ * メッセージ送受信処理の中で出力するためのログをJSON形式でフォーマットするクラス。
  *
  * @author Shuji Kitamura
  */
