@@ -9,7 +9,6 @@ import nablarch.fw.messaging.InterSystemMessage;
 import nablarch.fw.messaging.ReceivedMessage;
 import nablarch.fw.messaging.SendingMessage;
 import nablarch.test.support.tool.Hereis;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
@@ -36,13 +35,6 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
 
     @Before
     public void setup() {
-        System.clearProperty("messagingLogFormatter.sentMessageTargets");
-        System.clearProperty("messagingLogFormatter.receivedMessageTargets");
-        System.clearProperty("messagingLogFormatter.maskingPatterns");
-    }
-
-    @After
-    public void teardown() {
         System.clearProperty("messagingLogFormatter.sentMessageTargets");
         System.clearProperty("messagingLogFormatter.receivedMessageTargets");
         System.clearProperty("messagingLogFormatter.maskingPatterns");
