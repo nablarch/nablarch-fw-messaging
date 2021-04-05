@@ -363,11 +363,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * @author Shuji Kitamura
      */
     private static class MessageBodyBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
-
-        /** マスク文字 */
-        private final char maskingChar;
-        /** マスク対象のパターン */
-        private final Pattern[] maskingPatterns;
+        private final MessageBody messageBody;
 
         /**
          * コンストラクタ。
@@ -375,72 +371,12 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
          * @param maskingPatterns マスク対象のパターン
          */
         public MessageBodyBuilder(char maskingChar, Pattern[] maskingPatterns) {
-            this.maskingPatterns = maskingPatterns;
-            this.maskingChar = maskingChar;
+            messageBody = new MessageBody(maskingChar, maskingPatterns);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
-            structuredObject.put(TARGET_NAME_MESSAGE_BODY, getMaskedBodyText(context));
-        }
-
-        protected String getMaskedBodyText(MessagingLogContext context) {
-            InterSystemMessage<?> message = context.getMessage();
-
-            Charset charset = context.getCharset();
-            if (charset == null) {
-                charset = getCharset(message);
-            }
-            byte[] bodyBytes = message.getBodyBytes();
-
-            return maskBodyText(new String(bodyBytes, charset));
-        }
-
-        /**
-         * メッセージからエンコーディングを取得する。
-         * 取得できない場合は"iso-8859-1"を返却する。
-         * @param message 対象のメッセージ
-         * @return エンコーディング
-         */
-        protected Charset getCharset(InterSystemMessage<?> message) {
-            DataRecordFormatter formatter = message.getFormatter();
-            String encoding = "iso-8859-1";
-            if (formatter instanceof FixedLengthDataRecordFormatter) {
-                formatter.initialize();
-                encoding = ((FixedLengthDataRecordFormatter) formatter)
-                        .getDefaultEncoding()
-                        .name();
-            }
-            return Charset.forName(encoding);
-        }
-
-        /**
-         * マスキングパターンに従い、メッセージ本文のマスク処理を行う。
-         * @param bodyText メッセージ本文
-         * @return マスク済みのメッセージ本文
-         */
-        private String maskBodyText(String bodyText) {
-            for (Pattern p : maskingPatterns) {
-                StringBuilder sb = new StringBuilder();
-
-                Matcher m = p.matcher(bodyText);
-                int lastEnd = 0;
-                while (m.find(lastEnd)) {
-                    int start = m.start(1);
-                    int end = m.end(1);
-                    sb.append(bodyText, lastEnd, start);
-                    sb.append(StringUtil.repeat(maskingChar, (end - start)));
-                    lastEnd = end;
-                }
-                sb.append(bodyText.substring(lastEnd));
-
-                bodyText = sb.toString();
-            }
-
-            return bodyText;
+            structuredObject.put(TARGET_NAME_MESSAGE_BODY, messageBody.get(context));
         }
     }
 
@@ -448,7 +384,8 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(メッセージボディ内容)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class MessageBodyHexBuilder extends MessageBodyBuilder {
+    private static class MessageBodyHexBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+        private final MessageBodyHex messageBodyHex;
 
         /**
          * コンストラクタ。
@@ -456,23 +393,12 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
          * @param maskingPatterns マスク対象のパターン
          */
         public MessageBodyHexBuilder(char maskingChar, Pattern[] maskingPatterns) {
-            super(maskingChar, maskingPatterns);
+            messageBodyHex = new MessageBodyHex(maskingChar, maskingPatterns);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void build(Map<String, Object> structuredObject, MessagingLogContext context) {
-            String bodyString = getMaskedBodyText(context);
-            if (StringUtil.isNullOrEmpty(bodyString)) {
-                structuredObject.put(TARGET_NAME_MESSAGE_BODY_HEX, "");
-            } else {
-                Charset charset = getCharset(context.getMessage());
-                byte[] bodyBytes = bodyString.getBytes(charset);
-                String value = new BigInteger(bodyBytes).toString(16).toUpperCase();
-                structuredObject.put(TARGET_NAME_MESSAGE_BODY_HEX, value);
-            }
+            structuredObject.put(TARGET_NAME_MESSAGE_BODY_HEX, messageBodyHex.get(context));
         }
     }
 
