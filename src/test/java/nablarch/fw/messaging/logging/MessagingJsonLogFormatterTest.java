@@ -41,7 +41,10 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
-     * {@link MessagingJsonLogFormatter#getSentMessageLog}メソッドのテスト。
+     * {@link MessagingJsonLogFormatter#getSentMessageLog(SendingMessage)}メソッドのテスト。
+     * <p>
+     * targets を指定しないデフォルトの場合。
+     * </p>
      */
     @Test
     public void testGetSentMessageLog() {
@@ -66,7 +69,10 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
-     * {@link MessagingJsonLogFormatter#getSentMessageLog}メソッドのテスト。
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
+     * <p>
+     * targets を指定しないデフォルトの場合。
+     * </p>
      */
     @Test
     public void testGetReceivedMessageLog() {
@@ -87,7 +93,10 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
-     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog}メソッドのテスト。
+     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog(SendingMessage, Charset)}メソッドのテスト。
+     * <p>
+     * targets を指定しないデフォルトの場合。
+     * </p>
      */
     @Test
     public void testGetHttpSendingMessageLog() {
@@ -115,6 +124,9 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
 
     /**
      * {@link MessagingJsonLogFormatter#getHttpReceivedMessageLog}メソッドのテスト。
+     * <p>
+     * targets を指定しないデフォルトの場合。
+     * </p>
      */
     @Test
     public void testGetHttpReceivedMessageLog() {
@@ -154,7 +166,10 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
-     * {@link MessagingJsonLogFormatter#getSentMessageLog}メソッドのテスト。
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
+     * <p>
+     * targets を指定した場合。
+     * </p>
      */
     @Test
     public void testGetReceivedMessageLogWithTargets() {
@@ -175,7 +190,10 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
-     * {@link MessagingJsonLogFormatter#getSentMessageLog}メソッドのテスト。
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
+     * <p>
+     * メッセージボディが無い場合。
+     * </p>
      */
     @Test
     public void testNoMessageBody() {
@@ -195,7 +213,10 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
-     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog}メソッドのテスト。
+     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog(SendingMessage, Charset)}メソッドのテスト。
+     * <p>
+     * XML データの場合。
+     * </p>
      */
     @Test
     public void testGetHttpSendingMessageLog2() {
