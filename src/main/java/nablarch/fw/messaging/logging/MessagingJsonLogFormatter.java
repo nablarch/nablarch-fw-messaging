@@ -181,7 +181,9 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
             String targetsPropName, String defaultTargets) {
 
         String targetsStr = props.get(targetsPropName);
-        if (StringUtil.isNullOrEmpty(targetsStr)) targetsStr = defaultTargets;
+        if (StringUtil.isNullOrEmpty(targetsStr)) {
+            targetsStr = defaultTargets;
+        }
 
         List<JsonLogObjectBuilder<MessagingLogContext>> structuredTargets
                 = new ArrayList<JsonLogObjectBuilder<MessagingLogContext>>();
