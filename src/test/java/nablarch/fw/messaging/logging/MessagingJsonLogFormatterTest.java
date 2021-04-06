@@ -8,8 +8,9 @@ import nablarch.core.util.FilePathSetting;
 import nablarch.fw.messaging.InterSystemMessage;
 import nablarch.fw.messaging.ReceivedMessage;
 import nablarch.fw.messaging.SendingMessage;
+import nablarch.test.support.SystemPropertyCleaner;
 import nablarch.test.support.tool.Hereis;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
@@ -33,16 +34,8 @@ import static org.junit.Assert.assertThrows;
  * @author Shuji Kitamura
  */
 public class MessagingJsonLogFormatterTest extends LogTestSupport {
-
-    @Before
-    public void setup() {
-        System.clearProperty("messagingLogFormatter.sentMessageTargets");
-        System.clearProperty("messagingLogFormatter.receivedMessageTargets");
-        System.clearProperty("messagingLogFormatter.httpSentMessageTargets");
-        System.clearProperty("messagingLogFormatter.httpReceivedMessageTargets");
-        System.clearProperty("messagingLogFormatter.maskingPatterns");
-        System.clearProperty("messagingLogFormatter.maskingChar");
-    }
+    @Rule
+    public SystemPropertyCleaner systemPropertyCleaner = new SystemPropertyCleaner();
 
     /**
      * {@link MessagingJsonLogFormatter#getSentMessageLog(SendingMessage)}メソッドのテスト。
