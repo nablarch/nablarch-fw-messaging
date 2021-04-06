@@ -242,7 +242,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * ラベルを処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class LabelBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class LabelBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         private final String label;
 
@@ -267,7 +267,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(スレッド名)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class ThreadNameBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class ThreadNameBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
@@ -282,7 +282,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(メッセージID)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class MessageIdBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class MessageIdBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
@@ -297,7 +297,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(宛先キュー名)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class DestinationBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class DestinationBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
@@ -312,7 +312,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(関連メッセージID)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class CorrelationIdBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class CorrelationIdBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
@@ -327,7 +327,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(応答宛先キュー名)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class ReplyToBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class ReplyToBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
@@ -342,7 +342,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(メッセージ有効期間)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class TimeToLiveBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class TimeToLiveBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
@@ -362,7 +362,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(メッセージボディ内容)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class MessageBodyBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class MessageBodyBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
         private final MessageBody messageBody;
 
         /**
@@ -384,7 +384,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(メッセージボディ内容)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class MessageBodyHexBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class MessageBodyHexBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
         private final MessageBodyHex messageBodyHex;
 
         /**
@@ -406,7 +406,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(メッセージボディバイト長)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class MessageBodyLengthBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class MessageBodyLengthBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
@@ -421,7 +421,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * 出力項目(メッセージヘッダ)を処理するクラス。
      * @author Shuji Kitamura
      */
-    private static class MessageHeaderBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
+    public static class MessageHeaderBuilder implements JsonLogObjectBuilder<MessagingLogContext> {
 
         /**
          * {@inheritDoc}
