@@ -37,7 +37,10 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     public void setup() {
         System.clearProperty("messagingLogFormatter.sentMessageTargets");
         System.clearProperty("messagingLogFormatter.receivedMessageTargets");
+        System.clearProperty("messagingLogFormatter.httpSentMessageTargets");
+        System.clearProperty("messagingLogFormatter.httpReceivedMessageTargets");
         System.clearProperty("messagingLogFormatter.maskingPatterns");
+        System.clearProperty("messagingLogFormatter.maskingChar");
     }
 
     /**
@@ -69,6 +72,49 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
+     * {@link MessagingJsonLogFormatter#getSentMessageLog(SendingMessage)} のマスク処理のテスト。
+     */
+    @Test
+    public void testGetSentMessageLogForMasking() {
+        System.setProperty("messagingLogFormatter.sentMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage()
+                .addRecord(new HashMap<String, Object>(){{
+                    put("data", "0123456789");
+                }});
+
+        String log = formatter.getSentMessageLog(message);
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+            withJsonPath("$", hasEntry("messageBody", "01***56789")),
+            withJsonPath("$", hasEntry("messageBodyHex", "30312A2A2A3536373839"))
+        )));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getSentMessageLog(SendingMessage)} のマスク処理のテスト（マスク文字差し替え）。
+     */
+    @Test
+    public void testGetSentMessageLogForMaskingWithCustomMaskingChar() {
+        System.setProperty("messagingLogFormatter.sentMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        System.setProperty("messagingLogFormatter.maskingChar", "#");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage()
+                .addRecord(new HashMap<String, Object>(){{
+                    put("data", "0123456789");
+                }});
+
+        String log = formatter.getSentMessageLog(message);
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$", hasEntry("messageBody", "01###56789")),
+                withJsonPath("$", hasEntry("messageBodyHex", "30312323233536373839"))
+        )));
+    }
+
+    /**
      * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
      * <p>
      * targets を指定しないデフォルトの場合。
@@ -90,6 +136,43 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
                 withJsonPath("$", hasEntry("correlationId", "correlationIdTest")),
                 withoutJsonPath("$.replyTo"),
                 withJsonPath("$", hasEntry("messageBody", "0123456789")))));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)} のマスク処理のテスト。
+     */
+    @Test
+    public void testGetReceivedMessageLogForMasking() {
+        System.setProperty("messagingLogFormatter.receivedMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getReceivedMessageLog(message);
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$", hasEntry("messageBody", "01***56789")),
+                withJsonPath("$", hasEntry("messageBodyHex", "30312A2A2A3536373839"))
+        )));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)} のマスク処理のテスト（マスク文字差し替え）。
+     */
+    @Test
+    public void testGetReceivedMessageLogForMaskingWithCustomMaskingChar() {
+        System.setProperty("messagingLogFormatter.receivedMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        System.setProperty("messagingLogFormatter.maskingChar", "#");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getReceivedMessageLog(message);
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$", hasEntry("messageBody", "01###56789")),
+                withJsonPath("$", hasEntry("messageBodyHex", "30312323233536373839"))
+        )));
     }
 
     /**
@@ -123,6 +206,49 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
+     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog(SendingMessage, Charset)} のマスク処理のテスト。
+     */
+    @Test
+    public void testGetHttpSentMessageLogForMasking() {
+        System.setProperty("messagingLogFormatter.httpSentMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage()
+                .addRecord(new HashMap<String, Object>(){{
+                    put("data", "0123456789");
+                }});
+
+        String log = formatter.getHttpSentMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$", hasEntry("messageBody", "01***56789")),
+                withJsonPath("$", hasEntry("messageBodyHex", "30312A2A2A3536373839"))
+        )));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog(SendingMessage, Charset)} のマスク処理のテスト（マスク文字差し替え）。
+     */
+    @Test
+    public void testGetHttpSentMessageLogForMaskingWithCustomMaskingChar() {
+        System.setProperty("messagingLogFormatter.httpSentMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        System.setProperty("messagingLogFormatter.maskingChar", "#");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage()
+                .addRecord(new HashMap<String, Object>(){{
+                    put("data", "0123456789");
+                }});
+
+        String log = formatter.getHttpSentMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$", hasEntry("messageBody", "01###56789")),
+                withJsonPath("$", hasEntry("messageBodyHex", "30312323233536373839"))
+        )));
+    }
+
+    /**
      * {@link MessagingJsonLogFormatter#getHttpReceivedMessageLog}メソッドのテスト。
      * <p>
      * targets を指定しないデフォルトの場合。
@@ -146,6 +272,43 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
                 withJsonPath("$.messageHeader", hasEntry("Destination", "destinationTest")),
                 withJsonPath("$.messageHeader", hasEntry("CorrelationId", "correlationIdTest")),
                 withJsonPath("$", hasEntry("messageBody", "0123456789")))));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getHttpReceivedMessageLog(ReceivedMessage, Charset)} のマスク処理のテスト。
+     */
+    @Test
+    public void testGetHttpReceivedMessageLogForMasking() {
+        System.setProperty("messagingLogFormatter.httpReceivedMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getHttpReceivedMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$", hasEntry("messageBody", "01***56789")),
+                withJsonPath("$", hasEntry("messageBodyHex", "30312A2A2A3536373839"))
+        )));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getHttpReceivedMessageLog(ReceivedMessage, Charset)} のマスク処理のテスト（マスク文字差し替え）。
+     */
+    @Test
+    public void testGetHttpReceivedMessageLogForMaskingWithCustomMaskingChar() {
+        System.setProperty("messagingLogFormatter.httpReceivedMessageTargets", "messageBody,messageBodyHex");
+        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
+        System.setProperty("messagingLogFormatter.maskingChar", "#");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getHttpReceivedMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$", hasEntry("messageBody", "01###56789")),
+                withJsonPath("$", hasEntry("messageBodyHex", "30312323233536373839"))
+        )));
     }
 
     /**
@@ -174,7 +337,6 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     @Test
     public void testGetReceivedMessageLogWithTargets() {
         System.setProperty("messagingLogFormatter.receivedMessageTargets", "timeToLive,messageBody,, , messageBodyLength ,messageBodyHex,messageBody");
-        System.setProperty("messagingLogFormatter.maskingPatterns", "(234)");
 
         MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
 
@@ -185,8 +347,8 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
         assertThat(log.substring("$JSON$".length()), isJson(allOf(
                 withoutJsonPath("$.timeToLive"),
                 withJsonPath("$", hasEntry("messageBodyLength", 11)),
-                withJsonPath("$", hasEntry("messageBodyHex", "30312A2A2A35363738393F")),
-                withJsonPath("$", hasEntry("messageBody", "01***56789?")))));
+                withJsonPath("$", hasEntry("messageBodyHex", "303132333435363738393F")),
+                withJsonPath("$", hasEntry("messageBody", "0123456789?")))));
     }
 
     /**
