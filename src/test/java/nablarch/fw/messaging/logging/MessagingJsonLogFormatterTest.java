@@ -23,6 +23,7 @@ import static com.jayway.jsonpath.matchers.JsonPathMatchers.withoutJsonPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThrows;
 
@@ -69,6 +70,31 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
                 withJsonPath("$", hasEntry("replyTo", "replyToTest")),
                 withJsonPath("$", hasEntry("timeToLive", 0)),
                 withJsonPath("$", hasEntry("messageBody", "0123456789")))));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getSentMessageLog(SendingMessage)}メソッドのテスト。
+     * <p>
+     * targets を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetSentMessageLogWithTargets() {
+        System.setProperty("messagingLogFormatter.sentMessageTargets", "label,messageId");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage()
+                .addRecord(new HashMap<String, Object>(){{
+                    put("data", "0123456789");
+                }});
+
+        String log = formatter.getSentMessageLog(message);
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+            withJsonPath("$.*", hasSize(2)),
+            withJsonPath("$", hasEntry("label", "SENT MESSAGE")),
+            withJsonPath("$", hasEntry("messageId", "messagingIdTest"))
+        )));
     }
 
     /**
@@ -139,6 +165,28 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
+     * <p>
+     * targets を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetReceivedMessageLogWithTargets() {
+        System.setProperty("messagingLogFormatter.receivedMessageTargets", "label,destination");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getReceivedMessageLog(message);
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+            withJsonPath("$.*", hasSize(2)),
+            withJsonPath("$", hasEntry("label", "RECEIVED MESSAGE")),
+            withJsonPath("$", hasEntry("destination", "destinationTest"))
+        )));
+    }
+
+    /**
      * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)} のマスク処理のテスト。
      */
     @Test
@@ -203,6 +251,31 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
                 withJsonPath("$.messageHeader", hasEntry("CorrelationId", "correlationIdTest")),
                 withJsonPath("$.messageHeader", hasEntry("ReplyTo", "replyToTest")),
                 withJsonPath("$", hasEntry("messageBody", "0123456789")))));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog(SendingMessage, Charset)}メソッドのテスト。
+     * <p>
+     * targets を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetHttpSendingMessageLogWithTargets() {
+        System.setProperty("messagingLogFormatter.httpSentMessageTargets", "label,threadName");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage()
+                .addRecord(new HashMap<String, Object>(){{
+                    put("data", "0123456789");
+                }});
+
+        String log = formatter.getHttpSentMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+            withJsonPath("$.*", hasSize(2)),
+            withJsonPath("$", hasEntry("label", "HTTP SENT MESSAGE")),
+            withJsonPath("$", hasEntry("threadName", Thread.currentThread().getName()))
+        )));
     }
 
     /**
@@ -275,6 +348,28 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
+     * {@link MessagingJsonLogFormatter#getHttpReceivedMessageLog}メソッドのテスト。
+     * <p>
+     * targets を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetHttpReceivedMessageLogWithTargets() {
+        System.setProperty("messagingLogFormatter.httpReceivedMessageTargets", "label,correlationId");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getHttpReceivedMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+            withJsonPath("$.*", hasSize(2)),
+            withJsonPath("$", hasEntry("label", "HTTP RECEIVED MESSAGE")),
+            withJsonPath("$", hasEntry("correlationId", "correlationIdTest"))
+        )));
+    }
+
+    /**
      * {@link MessagingJsonLogFormatter#getHttpReceivedMessageLog(ReceivedMessage, Charset)} のマスク処理のテスト。
      */
     @Test
@@ -326,29 +421,6 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
         });
 
         assertThat(e.getMessage(), is("[dummy] is unknown target. property name = [messagingLogFormatter.sentMessageTargets]"));
-    }
-
-    /**
-     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
-     * <p>
-     * targets を指定した場合。
-     * </p>
-     */
-    @Test
-    public void testGetReceivedMessageLogWithTargets() {
-        System.setProperty("messagingLogFormatter.receivedMessageTargets", "timeToLive,messageBody,, , messageBodyLength ,messageBodyHex,messageBody");
-
-        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
-
-        ReceivedMessage message = createReceivedMessage("0123456789?", "UTF-8");
-
-        String log = formatter.getReceivedMessageLog(message);
-        assertThat(log.startsWith("$JSON$"), is(true));
-        assertThat(log.substring("$JSON$".length()), isJson(allOf(
-                withoutJsonPath("$.timeToLive"),
-                withJsonPath("$", hasEntry("messageBodyLength", 11)),
-                withJsonPath("$", hasEntry("messageBodyHex", "303132333435363738393F")),
-                withJsonPath("$", hasEntry("messageBody", "0123456789?")))));
     }
 
     /**
