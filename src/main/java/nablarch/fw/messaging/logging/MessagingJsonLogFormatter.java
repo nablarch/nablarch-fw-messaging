@@ -123,20 +123,20 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
 
         Map<String, JsonLogObjectBuilder<MessagingLogContext>> objectBuilders = getObjectBuilders(props);
 
-        String label = getProp(props, PROPS_SENT_MESSAGE_LABEL, DEFAULT_SENT_MESSAGE_LABEL);
-        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
+        String sentMessageLabel = getProp(props, PROPS_SENT_MESSAGE_LABEL, DEFAULT_SENT_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(sentMessageLabel));
         sentMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_SENT_MESSAGE_TARGETS, DEFAULT_SENT_MESSAGE_TARGETS);
 
-        label = getProp(props, PROPS_RECEIVED_MESSAGE_LABEL, DEFAULT_RECEIVED_MESSAGE_LABEL);
-        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
+        String receivedMessageLabel = getProp(props, PROPS_RECEIVED_MESSAGE_LABEL, DEFAULT_RECEIVED_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(receivedMessageLabel));
         receivedMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_RECEIVED_MESSAGE_TARGETS, DEFAULT_RECEIVED_MESSAGE_TARGETS);
 
-        label = getProp(props, PROPS_HTTP_SENT_MESSAGE_LABEL, DEFAULT_HTTP_SENT_MESSAGE_LABEL);
-        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
+        String httpSentMessageLabel = getProp(props, PROPS_HTTP_SENT_MESSAGE_LABEL, DEFAULT_HTTP_SENT_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(httpSentMessageLabel));
         httpSentMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_HTTP_SENT_MESSAGE_TARGETS, DEFAULT_HTTP_SENT_MESSAGE_TARGETS);
 
-        label = getProp(props, PROPS_HTTP_RECEIVED_MESSAGE_LABEL, DEFAULT_HTTP_RECEIVED_MESSAGE_LABEL);
-        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(label));
+        String httpReceivedMessageLabel = getProp(props, PROPS_HTTP_RECEIVED_MESSAGE_LABEL, DEFAULT_HTTP_RECEIVED_MESSAGE_LABEL);
+        objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(httpReceivedMessageLabel));
         httpReceivedMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_HTTP_RECEIVED_MESSAGE_TARGETS, DEFAULT_HTTP_RECEIVED_MESSAGE_TARGETS);
     }
 
