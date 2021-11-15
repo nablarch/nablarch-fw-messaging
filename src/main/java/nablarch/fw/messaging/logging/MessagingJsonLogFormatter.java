@@ -250,7 +250,7 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
          * コンストラクタ。
          * @param label ラベル
          */
-        LabelBuilder(String label) {
+        public LabelBuilder(String label) {
             this.label = label;
         }
 
