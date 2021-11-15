@@ -91,6 +91,28 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
+     * {@link MessagingJsonLogFormatter#getSentMessageLog(SendingMessage)}メソッドのテスト。
+     * <p>
+     * labelの値を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetSentMessageLogWithLabelValue() {
+        System.setProperty("messagingLogFormatter.sentMessageTargets", "label");
+        System.setProperty("messagingLogFormatter.sentMessageLabel", "sent-message");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage();
+
+        String log = formatter.getSentMessageLog(message);
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$.*", hasSize(1)),
+                withJsonPath("$", hasEntry("label", "sent-message"))
+        )));
+    }
+
+    /**
      * {@link MessagingJsonLogFormatter#getSentMessageLog(SendingMessage)} のマスク処理のテスト。
      */
     @Test
@@ -176,6 +198,28 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
             withJsonPath("$.*", hasSize(2)),
             withJsonPath("$", hasEntry("label", "RECEIVED MESSAGE")),
             withJsonPath("$", hasEntry("destination", "destinationTest"))
+        )));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
+     * <p>
+     * label の値を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetReceivedMessageLogWithLabelValue() {
+        System.setProperty("messagingLogFormatter.receivedMessageTargets", "label");
+        System.setProperty("messagingLogFormatter.receivedMessageLabel", "received-message");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getReceivedMessageLog(message);
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$.*", hasSize(1)),
+                withJsonPath("$", hasEntry("label", "received-message"))
         )));
     }
 
@@ -272,6 +316,28 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
     }
 
     /**
+     * {@link MessagingJsonLogFormatter#getHttpSentMessageLog(SendingMessage, Charset)}メソッドのテスト。
+     * <p>
+     * label の値を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetHttpSendingMessageLogWithLabelValue() {
+        System.setProperty("messagingLogFormatter.httpSentMessageTargets", "label");
+        System.setProperty("messagingLogFormatter.httpSentMessageLabel", "http-sent-message");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        SendingMessage message = createSendingMessage();
+
+        String log = formatter.getHttpSentMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$.*", hasSize(1)),
+                withJsonPath("$", hasEntry("label", "http-sent-message"))
+        )));
+    }
+
+    /**
      * {@link MessagingJsonLogFormatter#getHttpSentMessageLog(SendingMessage, Charset)} のマスク処理のテスト。
      */
     @Test
@@ -359,6 +425,28 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
             withJsonPath("$.*", hasSize(2)),
             withJsonPath("$", hasEntry("label", "HTTP RECEIVED MESSAGE")),
             withJsonPath("$", hasEntry("correlationId", "correlationIdTest"))
+        )));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getHttpReceivedMessageLog}メソッドのテスト。
+     * <p>
+     * label の値を指定した場合。
+     * </p>
+     */
+    @Test
+    public void testGetHttpReceivedMessageLogWithLabelValue() {
+        System.setProperty("messagingLogFormatter.httpReceivedMessageTargets", "label");
+        System.setProperty("messagingLogFormatter.httpReceivedMessageLabel", "http-received-message");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getHttpReceivedMessageLog(message, getCharsetFromMessage(message));
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$.*", hasSize(1)),
+                withJsonPath("$", hasEntry("label", "http-received-message"))
         )));
     }
 
