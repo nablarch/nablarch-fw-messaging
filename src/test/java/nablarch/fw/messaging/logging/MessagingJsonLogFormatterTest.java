@@ -4,6 +4,10 @@ import nablarch.core.dataformat.DataRecordFormatter;
 import nablarch.core.dataformat.DataRecordFormatterSupport;
 import nablarch.core.dataformat.FormatterFactory;
 import nablarch.core.log.LogTestSupport;
+import nablarch.core.text.json.BasicJsonSerializationManager;
+import nablarch.core.text.json.JsonSerializationManager;
+import nablarch.core.text.json.JsonSerializationSettings;
+import nablarch.core.text.json.JsonSerializer;
 import nablarch.core.util.FilePathSetting;
 import nablarch.fw.messaging.InterSystemMessage;
 import nablarch.fw.messaging.ReceivedMessage;
@@ -15,6 +19,8 @@ import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
@@ -549,6 +555,59 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
                 withJsonPath("$", hasEntry("messageId", "messagingId")),
                 withJsonPath("$.messageHeader", hasEntry("MessageId", "messagingId")),
                 withJsonPath("$", hasEntry("messageBody", "<?xml version=\"1.0\" encoding=\"UTF-8\"?><request><data>0123456789</data></request>")))));
+    }
+
+    /**
+     * {@link nablarch.core.text.json.JsonSerializationManager}の実装を変更できることをテスト。
+     */
+    @Test
+    public void testChangeJsonSerializationManager() {
+        System.setProperty("messagingLogFormatter.sentMessageTargets", "threadName,messageId,messageBody");
+
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter() {
+            @Override
+            protected JsonSerializationManager createSerializationManager(JsonSerializationSettings settings) {
+                assertThat(settings.getProp("sentMessageTargets"), is("threadName,messageId,messageBody"));
+                return new MockJsonSerializationManager();
+            }
+        };
+
+        final SendingMessage sendingMessage = createSendingMessage();
+        final ReceivedMessage receivedMessage = createReceivedMessage("body", "UTF-8");
+
+        assertThat(formatter.getSentMessageLog(sendingMessage),
+                is("$JSON$mock serialization"));
+        assertThat(formatter.getReceivedMessageLog(receivedMessage),
+                is("$JSON$mock serialization"));
+        assertThat(formatter.getHttpSentMessageLog(sendingMessage, getCharsetFromMessage(sendingMessage)),
+                is("$JSON$mock serialization"));
+        assertThat(formatter.getHttpReceivedMessageLog(receivedMessage, getCharsetFromMessage(receivedMessage)),
+                is("$JSON$mock serialization"));
+    }
+
+    /**
+     * {@link nablarch.core.text.json.JsonSerializationManager}のモッククラス。
+     */
+    private static class MockJsonSerializationManager extends BasicJsonSerializationManager {
+        @Override
+        public JsonSerializer getSerializer(Object value) {
+            return new JsonSerializer() {
+
+                @Override
+                public void serialize(Writer writer, Object value) throws IOException {
+                    writer.write("mock serialization");
+                }
+
+                @Override
+                public void initialize(JsonSerializationSettings settings) {
+                }
+
+                @Override
+                public boolean isTarget(Class<?> valueClass) {
+                    return false;
+                }
+            };
+        }
     }
 
     /**

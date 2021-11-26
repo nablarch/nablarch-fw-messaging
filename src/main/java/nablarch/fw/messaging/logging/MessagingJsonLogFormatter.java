@@ -1,17 +1,15 @@
 package nablarch.fw.messaging.logging;
 
-import nablarch.core.dataformat.DataRecordFormatter;
-import nablarch.core.dataformat.FixedLengthDataRecordFormatter;
 import nablarch.core.log.app.AppLogUtil;
 import nablarch.core.log.app.JsonLogFormatterSupport;
 import nablarch.core.log.basic.JsonLogObjectBuilder;
+import nablarch.core.text.json.BasicJsonSerializationManager;
+import nablarch.core.text.json.JsonSerializationManager;
 import nablarch.core.text.json.JsonSerializationSettings;
 import nablarch.core.util.StringUtil;
-import nablarch.fw.messaging.InterSystemMessage;
 import nablarch.fw.messaging.ReceivedMessage;
 import nablarch.fw.messaging.SendingMessage;
 
-import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -117,9 +114,9 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
      * @param props 各種ログ出力の設定情報
      */
     protected void initialize(Map<String, String> props) {
-
-        support = new JsonLogFormatterSupport(
-                new JsonSerializationSettings(props, PROPS_PREFIX, AppLogUtil.getFilePath()));
+        JsonSerializationSettings settings = new JsonSerializationSettings(props, PROPS_PREFIX, AppLogUtil.getFilePath());
+        JsonSerializationManager serializationManager = createSerializationManager(settings);
+        support = new JsonLogFormatterSupport(serializationManager, settings);
 
         Map<String, JsonLogObjectBuilder<MessagingLogContext>> objectBuilders = getObjectBuilders(props);
 
@@ -138,6 +135,15 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
         String httpReceivedMessageLabel = getProp(props, PROPS_HTTP_RECEIVED_MESSAGE_LABEL, DEFAULT_HTTP_RECEIVED_MESSAGE_LABEL);
         objectBuilders.put(TARGET_NAME_LABEL, new LabelBuilder(httpReceivedMessageLabel));
         httpReceivedMessageTargets = getStructuredTargets(objectBuilders, props, PROPS_HTTP_RECEIVED_MESSAGE_TARGETS, DEFAULT_HTTP_RECEIVED_MESSAGE_TARGETS);
+    }
+
+    /**
+     * 変換処理に使用する{@link JsonSerializationManager}を生成する。
+     * @param settings 各種ログ出力の設定情報
+     * @return {@link JsonSerializationManager}
+     */
+    protected JsonSerializationManager createSerializationManager(JsonSerializationSettings settings) {
+        return new BasicJsonSerializationManager();
     }
 
     /**
