@@ -275,7 +275,7 @@ public class MessagingLogFormatter {
      * @param props 各種ログの設定情報
      * @return マスク文字
      */
-    private char getMaskingChar(Map<String, String> props) {
+    protected char getMaskingChar(Map<String, String> props) {
         String maskingChar = getProp(props, PROPS_MASKING_CHAR, DEFAULT_MASKING_CHAR);
         if (maskingChar.toCharArray().length != 1) {
             throw new IllegalArgumentException(
@@ -290,7 +290,7 @@ public class MessagingLogFormatter {
      * @param props 各種ログの設定情報
      * @return マスク対象のパラメータ名
      */
-    private Pattern[] getBodyMaskingPatterns(Map<String, String> props) {
+    protected Pattern[] getBodyMaskingPatterns(Map<String, String> props) {
         String patterns = props.get(PROPS_MASKING_PATTERNS);
         if (patterns == null) {
             return DEFAULT_MASKING_PATTERNS;
@@ -316,7 +316,7 @@ public class MessagingLogFormatter {
      * @param defaultValue プロパティのデフォルト値
      * @return プロパティ
      */
-    private String getProp(Map<String, String> props, String propName, String defaultValue) {
+    protected String getProp(Map<String, String> props, String propName, String defaultValue) {
         String value = props.get(propName);
         return value != null ? value : defaultValue;
     }
