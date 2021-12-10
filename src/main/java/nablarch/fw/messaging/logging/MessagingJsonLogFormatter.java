@@ -76,7 +76,13 @@ public class MessagingJsonLogFormatter extends MessagingLogFormatter {
     /** デフォルトのHTTP送信メッセージの出力項目 */
     private static final String DEFAULT_HTTP_SENT_MESSAGE_TARGETS
             = "label,threadName,messageId,destination,correlationId,messageHeader,messageBody";
-    /** デフォルトのHTTP受信メッセージの出力項目 */
+    /**
+     * デフォルトのHTTP受信メッセージの出力項目
+     * <p>
+     * SonarQube で、同じ値の定数が定義されているという指摘が出るが、
+     * 値が同じだけで意味は異なる項目なので問題ない。
+     * </p>
+     */
     private static final String DEFAULT_HTTP_RECEIVED_MESSAGE_TARGETS
             = "label,threadName,messageId,destination,correlationId,messageHeader,messageBody";
 
