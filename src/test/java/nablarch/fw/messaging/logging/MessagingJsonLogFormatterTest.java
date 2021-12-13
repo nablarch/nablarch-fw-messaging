@@ -79,7 +79,7 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
      */
     @Test
     public void testGetSentMessageLogWithTargets() {
-        System.setProperty("messagingLogFormatter.sentMessageTargets", "label,messageId");
+        System.setProperty("messagingLogFormatter.sentMessageTargets", "label,messageId,,messageId");
         MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
 
         SendingMessage message = createSendingMessage()
@@ -263,6 +263,28 @@ public class MessagingJsonLogFormatterTest extends LogTestSupport {
         assertThat(log.substring("$JSON$".length()), isJson(allOf(
                 withJsonPath("$", hasEntry("messageBody", "01###56789")),
                 withJsonPath("$", hasEntry("messageBodyHex", "30312323233536373839"))
+        )));
+    }
+
+    /**
+     * {@link MessagingJsonLogFormatter#getReceivedMessageLog(ReceivedMessage)}メソッドのテスト。
+     * <p>
+     * {@link SendingMessage} 以外のクラスを渡すメソッドで timeToLive を指定した場合、
+     * timeToLive の項目は出力されない（nullになる）こと。
+     * </p>
+     */
+    @Test
+    public void testGetReceivedMessageLogWithTimeToLive() {
+        System.setProperty("messagingLogFormatter.receivedMessageTargets", "label,timeToLive");
+        MessagingLogFormatter formatter = new MessagingJsonLogFormatter();
+
+        ReceivedMessage message = createReceivedMessage("0123456789", "UTF-8");
+
+        String log = formatter.getReceivedMessageLog(message);
+        assertThat(log.startsWith("$JSON$"), is(true));
+        assertThat(log.substring("$JSON$".length()), isJson(allOf(
+                withJsonPath("$.*", hasSize(1)),
+                withJsonPath("$", hasEntry("label", "RECEIVED MESSAGE"))
         )));
     }
 
