@@ -7,6 +7,7 @@ import nablarch.core.text.json.BasicJsonSerializationManager;
 import nablarch.core.text.json.JsonSerializationManager;
 import nablarch.core.text.json.JsonSerializationSettings;
 import nablarch.core.util.StringUtil;
+import nablarch.core.util.annotation.Published;
 import nablarch.fw.messaging.ReceivedMessage;
 import nablarch.fw.messaging.SendingMessage;
 
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
  *
  * @author Shuji Kitamura
  */
+@Published(tag = "architect")
 public class MessagingJsonLogFormatter extends MessagingLogFormatter {
 
     /** ラベルの項目名 */
