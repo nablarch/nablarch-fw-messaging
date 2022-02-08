@@ -376,8 +376,8 @@ public class MessagingSampleTest {
         Thread.sleep(1000);
         new RetryClient().execute(); // プロセス異常停止 (リトライ上限超過)
 
-        // 最大30秒FATALログが出力されるのを待つ。
-        for (int i = 0; i < 30; i++) {
+        // 最大100秒FATALログが出力されるのを待つ。
+        for (int i = 0; i < 100; i++) {
             List<String> logs = OnMemoryLogWriter.getMessages("writer.monitorLog");
             if (logs.toString().contains("FATAL")) {
                 break;
