@@ -14,6 +14,10 @@
     <url>https://github.com/nablarch/${project.artifactId}/tree/master</url>
   </scm>
 
+  <properties>
+    <artemis.version>2.27.1</artemis.version>
+  </properties>
+
   <parent>
     <groupId>com.nablarch</groupId>
     <artifactId>nablarch-parent</artifactId>
@@ -44,8 +48,22 @@
 
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-all</artifactId>
-      <version>5.9.1</version>
+      <artifactId>artemis-server</artifactId>
+      <version>${artemis.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>artemis-jakarta-server</artifactId>
+      <version>${artemis.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>artemis-jakarta-client</artifactId>
+      <version>${artemis.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -68,9 +86,9 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -101,4 +119,3 @@
     </testResources>
   </build>
 </project>
-
