@@ -17,7 +17,6 @@ import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
 import nablarch.test.support.tool.Hereis;
-import org.apache.activemq.util.ByteArrayInputStream;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -25,10 +24,9 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -93,7 +91,6 @@ public class MessageResendHandlerTest {
         assertEquals("RegisterBook", records.get(0).requestId);
         assertEquals("ALICE.REPLY_FROM_BOB", records.get(0).replyQueue);
         assertEquals("200", records.get(0).statusCode);
-        InputStream in = new ByteArrayInputStream(records.get(0).bodyData);
         assertEquals("RegisterBook", req.getFwHeader().getRequestId());
 
         // 実行コンテキストを再構築
@@ -308,7 +305,6 @@ public class MessageResendHandlerTest {
         assertEquals("RegisterBook", records.get(0).clmRequestId);
         assertEquals("ALICE.REPLY_FROM_BOB", records.get(0).clmReplyQueue);
         assertEquals("200", records.get(0).clmStatusCode);
-        InputStream in = new ByteArrayInputStream(records.get(0).clmBodyData);
         assertEquals("RegisterBook", req.getFwHeader().getRequestId());
     }
 

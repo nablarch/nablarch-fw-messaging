@@ -1,7 +1,7 @@
 package nablarch.fw.web.i18n;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * フレームワークのテスト用に{@link ServletContext}を生成するクラス。
