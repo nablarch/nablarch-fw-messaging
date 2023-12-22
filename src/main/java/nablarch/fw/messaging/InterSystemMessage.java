@@ -61,7 +61,7 @@ import static nablarch.core.util.StringUtil.isNullOrEmpty;
  * <p>
  * このクラスは各電文クラスに共通する機能やデータ構造を実装するものの、
  * 直接インスタンスを作成することはできない。
- * これは、JMSのjavax.jms.Messageのような汎用メッセージオブジェクトを使いまわすのではなく、
+ * これは、Jakarta Messagingのjakarta.jms.Messageのような汎用メッセージオブジェクトを使いまわすのではなく、
  * その用途に応じて以下の4つの具象クラスを使いわける設計となっているためである。
  * <p>
  * <ol>
