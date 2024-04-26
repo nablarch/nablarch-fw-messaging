@@ -1,11 +1,14 @@
 package nablarch.fw.messaging;
 
+import nablarch.core.util.annotation.Published;
+
 /**
  * 送受信電文中のフレームワーク制御ヘッダ項目に対する読み書きを行うモジュールが
  * 実装するインターフェース。
  * 具体的に電文中のどの部分をフレームワーク制御ヘッダの各項目に対応させるかについては、
  * 各具象クラスごとに異なる。
  */
+@Published(tag = "architect")
 public interface FwHeaderDefinition {
     /**
      * 受信電文中のフレームワーク制御ヘッダ部を読み込み、
