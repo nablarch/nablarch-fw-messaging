@@ -9,7 +9,6 @@ import nablarch.core.util.annotation.Published;
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.Handler;
 import nablarch.fw.TransactionEventCallback;
-import nablarch.fw.messaging.ReceivedMessage;
 import nablarch.fw.messaging.RequestMessage;
 import nablarch.fw.messaging.ResponseMessage;
 
