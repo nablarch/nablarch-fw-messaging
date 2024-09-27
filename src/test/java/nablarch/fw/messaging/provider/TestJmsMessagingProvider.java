@@ -40,7 +40,7 @@ import java.util.Map.Entry;
  * サポートしない一部のMOM製品/バージョンでは利用できない。
  * なお、以下のMOMについては最新版における同ヘッダのサポートを確認している。
  * <pre>
- * - Websphere MQ
+ * - IBM MQ
  * - WebLogic MQ
  * - ActiveMQ
  * </pre>
